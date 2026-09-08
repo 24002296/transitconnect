@@ -1,0 +1,1539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | TransitConnect</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f7fb;
+            color: #172033;
+            line-height: 1.6;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        button {
+            font-family: inherit;
+        }
+
+        /* ================= NAVBAR ================= */
+
+        .navbar {
+            background: #ffffff;
+            border-bottom: 1px solid #e5e9f2;
+            padding: 16px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 22px;
+            font-weight: 800;
+            color: #172033;
+        }
+
+        .logo-icon {
+            width: 42px;
+            height: 42px;
+            background: #2563eb;
+            color: white;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 21px;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .admin-label {
+            background: #eef4ff;
+            color: #2563eb;
+            padding: 7px 13px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .logout-btn {
+            border: none;
+            background: #fee2e2;
+            color: #dc2626;
+            padding: 9px 15px;
+            border-radius: 9px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .logout-btn:hover {
+            background: #fecaca;
+        }
+
+        /* ================= MAIN ================= */
+
+        .container {
+            width: 90%;
+            max-width: 1400px;
+            margin: auto;
+        }
+
+        .page-header {
+            padding: 38px 0 25px;
+        }
+
+        .page-header h1 {
+            font-size: 32px;
+            margin-bottom: 6px;
+        }
+
+        .page-header p {
+            color: #697386;
+        }
+
+        .admin-tag {
+            display: inline-block;
+            margin-top: 12px;
+            background: #e0ecff;
+            color: #1d4ed8;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        /* ================= STATS ================= */
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            border: 1px solid #e6eaf0;
+            border-radius: 16px;
+            padding: 22px;
+            box-shadow: 0 4px 15px rgba(15, 23, 42, 0.04);
+        }
+
+        .stat-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .stat-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: #eef4ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 21px;
+        }
+
+        .stat-card h3 {
+            font-size: 29px;
+            margin-bottom: 2px;
+        }
+
+        .stat-card p {
+            color: #7a8495;
+            font-size: 14px;
+        }
+
+        /* ================= ACTION BAR ================= */
+
+        .action-bar {
+            background: white;
+            border: 1px solid #e6eaf0;
+            border-radius: 15px;
+            padding: 16px 18px;
+            margin-bottom: 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .action-bar p {
+            color: #687386;
+            font-size: 14px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            border: none;
+            padding: 10px 16px;
+            border-radius: 9px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-primary {
+            background: #2563eb;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1d4ed8;
+        }
+
+        .btn-danger {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .btn-danger:hover {
+            background: #fecaca;
+        }
+
+        /* ================= SECTION ================= */
+
+        .section {
+            background: white;
+            border: 1px solid #e6eaf0;
+            border-radius: 16px;
+            margin-bottom: 28px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(15, 23, 42, 0.03);
+        }
+
+        .section-header {
+            padding: 20px 22px;
+            border-bottom: 1px solid #edf0f5;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .section-header h2 {
+            font-size: 19px;
+        }
+
+        .section-header p {
+            color: #7a8495;
+            font-size: 13px;
+            margin-top: 2px;
+        }
+
+        .count-badge {
+            background: #eef4ff;
+            color: #2563eb;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        /* ================= TABLE ================= */
+
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px;
+        }
+
+        th,
+        td {
+            padding: 14px 18px;
+            text-align: left;
+            border-bottom: 1px solid #edf0f5;
+            font-size: 13px;
+            vertical-align: top;
+        }
+
+        th {
+            background: #f8fafc;
+            color: #566174;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tbody tr:hover {
+            background: #fafcff;
+        }
+
+        .name-cell {
+            font-weight: 700;
+            color: #172033;
+        }
+
+        .muted {
+            color: #7a8495;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 5px 9px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .status-paid,
+        .status-submitted,
+        .status-active {
+            background: #dcfce7;
+            color: #15803d;
+        }
+
+        .status-alert {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .status-admin {
+            background: #ede9fe;
+            color: #6d28d9;
+        }
+
+        .status-passenger {
+            background: #e0f2fe;
+            color: #0369a1;
+        }
+
+        .fare {
+            font-weight: 800;
+            color: #15803d;
+        }
+
+        .route-cell {
+            min-width: 180px;
+        }
+
+        .route-arrow {
+            color: #2563eb;
+            margin: 0 5px;
+        }
+
+        /* ================= EMPTY ================= */
+
+        .empty {
+            text-align: center;
+            padding: 35px 20px;
+            color: #7a8495;
+        }
+
+        .empty-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        /* ================= SAFETY ================= */
+
+        .safety-summary {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+            padding: 20px;
+        }
+
+        .safety-box {
+            border: 1px solid #e8edf4;
+            border-radius: 12px;
+            padding: 18px;
+            background: #fbfcfe;
+        }
+
+        .safety-box h3 {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .safety-box p {
+            font-size: 13px;
+            color: #718096;
+        }
+
+        /* ================= FOOTER ================= */
+
+        footer {
+            text-align: center;
+            padding: 35px 20px;
+            color: #7a8495;
+            font-size: 13px;
+        }
+
+        /* ================= RESPONSIVE ================= */
+
+        @media (max-width: 1000px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 700px) {
+            .navbar {
+                padding: 13px 4%;
+            }
+
+            .logo {
+                font-size: 18px;
+            }
+
+            .logo-icon {
+                width: 37px;
+                height: 37px;
+            }
+
+            .admin-label {
+                display: none;
+            }
+
+            .container {
+                width: 92%;
+            }
+
+            .page-header h1 {
+                font-size: 27px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .action-bar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .safety-summary {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ================= NAVBAR ================= -->
+
+    <nav class="navbar">
+        <a href="admin.html" class="logo">
+            <span class="logo-icon">🚆</span>
+            <span>TransitConnect</span>
+        </a>
+
+        <div class="nav-right">
+            <span class="admin-label">Administrator</span>
+            <button class="logout-btn" id="logoutBtn">Logout</button>
+        </div>
+    </nav>
+
+
+    <main class="container">
+
+        <!-- ================= HEADER ================= -->
+
+        <section class="page-header">
+            <h1>Admin Dashboard</h1>
+            <p>
+                Monitor passengers, bookings, revenue and safety activity
+                across the TransitConnect prototype.
+            </p>
+
+            <span class="admin-tag">
+                🔐 ADMINISTRATOR CONTROL PANEL
+            </span>
+        </section>
+
+
+        <!-- ================= STATISTICS ================= -->
+
+        <section class="stats-grid">
+
+            <div class="stat-card">
+                <div class="stat-top">
+                    <div>
+                        <h3 id="totalUsers">0</h3>
+                        <p>Total Users</p>
+                    </div>
+
+                    <div class="stat-icon">👥</div>
+                </div>
+            </div>
+
+
+            <div class="stat-card">
+                <div class="stat-top">
+                    <div>
+                        <h3 id="totalBookings">0</h3>
+                        <p>Total Bookings</p>
+                    </div>
+
+                    <div class="stat-icon">🎫</div>
+                </div>
+            </div>
+
+
+            <div class="stat-card">
+                <div class="stat-top">
+                    <div>
+                        <h3 id="totalRevenue">R0.00</h3>
+                        <p>Prototype Revenue</p>
+                    </div>
+
+                    <div class="stat-icon">💰</div>
+                </div>
+            </div>
+
+
+            <div class="stat-card">
+                <div class="stat-top">
+                    <div>
+                        <h3 id="totalReports">0</h3>
+                        <p>Safety Reports</p>
+                    </div>
+
+                    <div class="stat-icon">🛡️</div>
+                </div>
+            </div>
+
+        </section>
+
+
+        <!-- ================= ACTION BAR ================= -->
+
+        <section class="action-bar">
+
+            <p>
+                Data shown below is stored locally in the browser for this prototype.
+            </p>
+
+            <div class="action-buttons">
+
+                <button class="btn btn-primary" id="refreshBtn">
+                    🔄 Refresh Data
+                </button>
+
+                <button class="btn btn-danger" id="clearBtn">
+                    🗑️ Clear Demo Activity
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= USERS ================= -->
+
+        <section class="section">
+
+            <div class="section-header">
+
+                <div>
+                    <h2>Registered Users</h2>
+                    <p>Passengers and administrators registered in the prototype.</p>
+                </div>
+
+                <span class="count-badge" id="usersCount">
+                    0 users
+                </span>
+
+            </div>
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>User ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Role</th>
+<th>Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="usersTable">
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= BOOKINGS ================= -->
+
+        <section class="section">
+
+            <div class="section-header">
+
+                <div>
+                    <h2>Bookings & Revenue</h2>
+                    <p>All paid journey bookings recorded by the prototype.</p>
+                </div>
+
+                <span class="count-badge" id="bookingsCount">
+                    0 bookings
+                </span>
+
+            </div>
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>Booking ID</th>
+                            <th>Ticket ID</th>
+                            <th>Passenger</th>
+                            <th>Route</th>
+                            <th>Date</th>
+                            <th>Fare</th>
+                            <th>Payment</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="bookingsTable">
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= SAFETY REPORTS ================= -->
+
+        <section class="section">
+
+            <div class="section-header">
+
+                <div>
+                    <h2>Safety Reports</h2>
+                    <p>Incident reports submitted by passengers.</p>
+                </div>
+
+                <span class="count-badge" id="reportsCount">
+                    0 reports
+                </span>
+
+            </div>
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>Report ID</th>
+                            <th>Passenger</th>
+                            <th>Incident Type</th>
+                            <th>Location</th>
+                            <th>Date / Time</th>
+                            <th>Description</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="reportsTable">
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= SOS ALERTS ================= -->
+
+        <section class="section">
+
+            <div class="section-header">
+
+                <div>
+                    <h2>Safety Alerts / SOS Events</h2>
+                    <p>
+                        Simulated SOS events generated from the Safety Centre.
+                    </p>
+                </div>
+
+                <span class="count-badge" id="sosCount">
+                    0 alerts
+                </span>
+
+            </div>
+
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>SOS ID</th>
+                            <th>Passenger</th>
+                            <th>Time</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="sosTable">
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= SYSTEM SUMMARY ================= -->
+
+        <section class="section">
+
+            <div class="section-header">
+
+                <div>
+                    <h2>System Summary</h2>
+                    <p>Overview of the current prototype environment.</p>
+                </div>
+
+            </div>
+
+            <div class="safety-summary">
+
+                <div class="safety-box">
+                    <h3>💾 Data Storage</h3>
+                    <p>
+                        TransitConnect currently uses browser LocalStorage
+                        as a temporary prototype database.
+                    </p>
+                </div>
+
+                <div class="safety-box">
+                    <h3>💳 Payment Processing</h3>
+                    <p>
+                        Payments are simulated. No real financial transaction
+                        or payment gateway is connected.
+                    </p>
+                </div>
+
+                <div class="safety-box">
+                    <h3>🎫 Ticketing</h3>
+                    <p>
+                        Tickets are generated locally after a successful
+                        simulated payment.
+                    </p>
+                </div>
+
+                <div class="safety-box">
+                    <h3>🛡️ Safety</h3>
+                    <p>
+                        SOS and incident reporting are prototype features
+                        and do not contact emergency services.
+                    </p>
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- ================= FOOTER ================= -->
+
+    <footer>
+        <p>
+            © 2026 TransitConnect — Integrated Taxi, Bus & Train Journey Planning System
+        </p>
+
+        <p>
+            Frontend Prototype | HTML • CSS • JavaScript • LocalStorage
+        </p>
+    </footer>
+
+
+    <!-- ================= JAVASCRIPT ================= -->
+
+    <script>
+
+        /* =========================================================
+           ADMIN ACCESS CONTROL
+        ========================================================= */
+
+        const currentUser =
+            JSON.parse(localStorage.getItem("currentUser"));
+
+        if (!currentUser) {
+
+            alert("Please log in as an administrator.");
+
+            window.location.href = "login.html";
+
+        } else if (currentUser.role !== "admin") {
+
+            alert("Access denied. Administrator privileges are required.");
+
+            window.location.href = "dashboard.html";
+
+        }
+
+
+        /* =========================================================
+           HELPER FUNCTIONS
+        ========================================================= */
+
+        function getUsers() {
+
+            return JSON.parse(
+                localStorage.getItem("users") || "[]"
+            );
+
+        }
+
+
+        function getBookings() {
+
+            return JSON.parse(
+                localStorage.getItem("bookings") || "[]"
+            );
+
+        }
+
+
+        function getSafetyReports() {
+
+            return JSON.parse(
+                localStorage.getItem("safetyReports") || "[]"
+            );
+
+        }
+
+
+        function getSosAlerts() {
+
+            return JSON.parse(
+                localStorage.getItem("sosAlerts") || "[]"
+            );
+
+        }
+
+
+        function escapeHTML(value) {
+
+            if (value === null || value === undefined) {
+                return "";
+            }
+
+            return String(value)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+
+        function formatCurrency(amount) {
+
+            const number = Number(amount) || 0;
+
+            return "R" + number.toFixed(2);
+
+        }
+
+
+        function formatDate(dateString) {
+
+            if (!dateString) {
+                return "—";
+            }
+
+            const date = new Date(dateString);
+
+            if (isNaN(date.getTime())) {
+                return escapeHTML(dateString);
+            }
+
+            return date.toLocaleDateString(
+                "en-ZA",
+                {
+                    day: "2-digit",
+                    month: "short",
+                    year: "numeric"
+                }
+            );
+
+        }
+
+
+        function formatDateTime(dateString) {
+
+            if (!dateString) {
+                return "—";
+            }
+
+            const date = new Date(dateString);
+
+            if (isNaN(date.getTime())) {
+                return escapeHTML(dateString);
+            }
+
+            return date.toLocaleString(
+                "en-ZA",
+                {
+                    day: "2-digit",
+                    month: "short",
+                    year: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit"
+                }
+            );
+
+        }
+
+
+        /* =========================================================
+           LOAD DASHBOARD
+        ========================================================= */
+
+        function loadDashboard() {
+
+            const users = getUsers();
+            const bookings = getBookings();
+            const reports = getSafetyReports();
+            const sosAlerts = getSosAlerts();
+
+
+            /* ================= REVENUE ================= */
+
+            let totalRevenue = 0;
+
+            bookings.forEach(function (booking) {
+
+                if (
+                    booking.route &&
+                    booking.route.price !== undefined
+                ) {
+
+                    totalRevenue +=
+                        Number(booking.route.price) || 0;
+
+                }
+
+            });
+
+
+            /* ================= STATISTICS ================= */
+
+            document.getElementById("totalUsers").textContent =
+                users.length;
+
+            document.getElementById("totalBookings").textContent =
+                bookings.length;
+
+            document.getElementById("totalRevenue").textContent =
+                formatCurrency(totalRevenue);
+
+            document.getElementById("totalReports").textContent =
+                reports.length;
+
+
+            /* ================= COUNTS ================= */
+
+            document.getElementById("usersCount").textContent =
+                users.length + (users.length === 1 ? " user" : " users");
+
+            document.getElementById("bookingsCount").textContent =
+                bookings.length +
+                (bookings.length === 1 ? " booking" : " bookings");
+
+            document.getElementById("reportsCount").textContent =
+                reports.length +
+                (reports.length === 1 ? " report" : " reports");
+
+            document.getElementById("sosCount").textContent =
+                sosAlerts.length +
+                (sosAlerts.length === 1 ? " alert" : " alerts");
+
+
+            renderUsers(users);
+            renderBookings(bookings);
+            renderReports(reports);
+            renderSosAlerts(sosAlerts);
+
+        }
+
+
+        /* =========================================================
+           USERS TABLE
+        ========================================================= */
+
+        function renderUsers(users) {
+
+            const table = document.getElementById("usersTable");
+
+            if (users.length === 0) {
+                table.innerHTML = `
+                    <tr>
+                        <td colspan="6">
+                            <div class="empty">
+                                <div class="empty-icon">👥</div>
+                                No users have been registered yet.
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+
+            table.innerHTML = users.map(function(user) {
+
+                const role = user.role || "passenger";
+
+                const roleClass =
+                    role === "admin"
+                        ? "status-admin"
+                        : "status-passenger";
+
+                return `
+                    <tr>
+
+                        <td>
+                            <span class="muted">
+                                ${escapeHTML(user.id || "—")}
+                            </span>
+                        </td>
+
+                        <td class="name-cell">
+                            ${escapeHTML(user.name || "—")}
+                        </td>
+
+                        <td>
+                            ${escapeHTML(user.email || "—")}
+                        </td>
+
+                        <td>
+                            ${escapeHTML(user.phone || "—")}
+                        </td>
+
+                        <td>
+                            <span class="status ${roleClass}">
+                                ${escapeHTML(role)}
+                            </span>
+                        </td>
+
+                        <td>
+                            ${
+                                role === "admin"
+                                ? `<span class="muted">Protected</span>`
+                                : `
+                                    <button
+                                        class="btn btn-danger"
+                                        onclick="deleteUser('${user.id}')">
+                                        Delete
+                                    </button>
+                                `
+                            }
+                        </td>
+
+                    </tr>
+                `;
+
+            }).join("");
+        }
+
+        function deleteUser(userId) {
+
+            const users = getUsers();
+
+            const user = users.find(function(user) {
+                return user.id === userId;
+            });
+
+            if (!user) {
+                alert("User not found.");
+                return;
+            }
+
+            // Prevent the administrator from being deleted
+            if (user.role === "admin") {
+                alert("The administrator account cannot be deleted.");
+                return;
+            }
+
+            const confirmed = confirm(
+                "Are you sure you want to delete " +
+                user.name +
+                "?"
+            );
+
+            if (!confirmed) {
+                return;
+            }
+
+            const updatedUsers = users.filter(function(user) {
+                return user.id !== userId;
+            });
+
+            localStorage.setItem(
+                "users",
+                JSON.stringify(updatedUsers)
+            );
+
+            // If the deleted user is currently logged in,
+            // log them out.
+            const loggedInUser =
+                JSON.parse(localStorage.getItem("currentUser"));
+
+            if (loggedInUser && loggedInUser.id === userId) {
+                localStorage.removeItem("currentUser");
+            }
+
+            loadDashboard();
+
+            alert("User deleted successfully.");
+        }        
+
+        /* =========================================================
+           BOOKINGS TABLE
+        ========================================================= */
+
+        function renderBookings(bookings) {
+
+            const table =
+                document.getElementById("bookingsTable");
+
+
+            if (bookings.length === 0) {
+
+                table.innerHTML = `
+                    <tr>
+                        <td colspan="8">
+                            <div class="empty">
+                                <div class="empty-icon">🎫</div>
+                                No bookings have been made yet.
+                            </div>
+                        </td>
+                    </tr>
+                `;
+
+                return;
+
+            }
+
+
+            const sortedBookings =
+                [...bookings].sort(function (a, b) {
+
+                    return new Date(b.paidAt || 0)
+                        - new Date(a.paidAt || 0);
+
+                });
+
+
+            table.innerHTML =
+                sortedBookings.map(function (booking) {
+
+                    const route =
+                        booking.route || {};
+
+                    const from =
+                        route.from || "Unknown";
+
+                    const to =
+                        route.to || "Unknown";
+
+                    const fare =
+                        Number(route.price) || 0;
+
+                    const method =
+                        booking.method || "—";
+
+                    const status =
+                        booking.status || "Paid";
+
+                    return `
+                        <tr>
+
+                            <td>
+                                <span class="muted">
+                                    ${escapeHTML(booking.id || "—")}
+                                </span>
+                            </td>
+
+                            <td>
+                                ${escapeHTML(booking.ticketId || "—")}
+                            </td>
+
+                            <td class="name-cell">
+                                ${escapeHTML(
+                                    booking.userName || "—"
+                                )}
+                            </td>
+
+                            <td class="route-cell">
+
+                                <strong>
+                                    ${escapeHTML(from)}
+                                </strong>
+
+                                <span class="route-arrow">
+                                    →
+                                </span>
+
+                                <strong>
+                                    ${escapeHTML(to)}
+                                </strong>
+
+                                <br>
+
+                                <span class="muted">
+                                    ${escapeHTML(
+                                        route.type || "Transport"
+                                    )}
+                                    ${route.operator
+                                        ? " • " +
+                                          escapeHTML(route.operator)
+                                        : ""}
+                                </span>
+
+                            </td>
+
+                            <td>
+                                ${formatDate(booking.travelDate)}
+                            </td>
+
+                            <td class="fare">
+                                ${formatCurrency(fare)}
+                            </td>
+
+                            <td>
+                                ${escapeHTML(method)}
+                            </td>
+
+                            <td>
+                                <span class="status status-paid">
+                                    ${escapeHTML(status)}
+                                </span>
+                            </td>
+
+                        </tr>
+                    `;
+
+                }).join("");
+
+        }
+
+
+        /* =========================================================
+           SAFETY REPORTS TABLE
+        ========================================================= */
+
+        function renderReports(reports) {
+
+            const table =
+                document.getElementById("reportsTable");
+
+
+            if (reports.length === 0) {
+
+                table.innerHTML = `
+                    <tr>
+                        <td colspan="7">
+                            <div class="empty">
+                                <div class="empty-icon">🛡️</div>
+                                No safety reports have been submitted.
+                            </div>
+                        </td>
+                    </tr>
+                `;
+
+                return;
+
+            }
+
+
+            const sortedReports =
+                [...reports].sort(function (a, b) {
+
+                    return new Date(b.createdAt || 0)
+                        - new Date(a.createdAt || 0);
+
+                });
+
+
+            table.innerHTML =
+                sortedReports.map(function (report) {
+
+                    const status =
+                        report.status || "Submitted";
+
+                    return `
+                        <tr>
+
+                            <td>
+                                <span class="muted">
+                                    ${escapeHTML(
+                                        report.id || "—"
+                                    )}
+                                </span>
+                            </td>
+
+                            <td class="name-cell">
+                                ${escapeHTML(
+                                    report.userName || "—"
+                                )}
+                            </td>
+
+                            <td>
+                                ${escapeHTML(
+                                    report.incidentType || "—"
+                                )}
+                            </td>
+
+                            <td>
+                                ${escapeHTML(
+                                    report.location || "—"
+                                )}
+                            </td>
+
+                            <td>
+                                ${formatDate(report.date)}
+                                <br>
+                                <span class="muted">
+                                    ${escapeHTML(
+                                        report.time || "—"
+                                    )}
+                                </span>
+                            </td>
+
+                            <td>
+                                ${escapeHTML(
+                                    report.description || "—"
+                                )}
+                            </td>
+
+                            <td>
+                                <span class="status status-submitted">
+                                    ${escapeHTML(status)}
+                                </span>
+                            </td>
+
+                        </tr>
+                    `;
+
+                }).join("");
+
+        }
+
+
+        /* =========================================================
+           SOS TABLE
+        ========================================================= */
+
+        function renderSosAlerts(alerts) {
+
+            const table =
+                document.getElementById("sosTable");
+
+
+            if (alerts.length === 0) {
+
+                table.innerHTML = `
+                    <tr>
+                        <td colspan="4">
+                            <div class="empty">
+                                <div class="empty-icon">🚨</div>
+                                No simulated SOS alerts have been recorded.
+                            </div>
+                        </td>
+                    </tr>
+                `;
+
+                return;
+
+            }
+
+
+            const sortedAlerts =
+                [...alerts].sort(function (a, b) {
+
+                    return new Date(b.createdAt || b.timestamp || 0)
+                        - new Date(a.createdAt || a.timestamp || 0);
+
+                });
+
+
+            table.innerHTML =
+                sortedAlerts.map(function (alert) {
+
+                    const alertTime =
+                        alert.createdAt ||
+                        alert.timestamp ||
+                        "";
+
+                    const status =
+                        alert.status || "Simulated";
+
+
+                    return `
+                        <tr>
+
+                            <td>
+                                <span class="muted">
+                                    ${escapeHTML(
+                                        alert.id ||
+                                        alert.alertId ||
+                                        "—"
+                                    )}
+                                </span>
+                            </td>
+
+                            <td class="name-cell">
+                                ${escapeHTML(
+                                    alert.userName ||
+                                    alert.name ||
+                                    "Passenger"
+                                )}
+                            </td>
+
+                            <td>
+                                ${formatDateTime(alertTime)}
+                            </td>
+
+                            <td>
+                                <span class="status status-alert">
+                                    ${escapeHTML(status)}
+                                </span>
+                            </td>
+
+                        </tr>
+                    `;
+
+                }).join("");
+
+        }
+
+
+        /* =========================================================
+           REFRESH BUTTON
+        ========================================================= */
+
+        document
+            .getElementById("refreshBtn")
+            .addEventListener("click", function () {
+
+                loadDashboard();
+
+            });
+
+
+        /* =========================================================
+           CLEAR DEMO ACTIVITY
+        ========================================================= */
+
+        document
+            .getElementById("clearBtn")
+            .addEventListener("click", function () {
+
+                const confirmed =
+                    confirm(
+                        "Are you sure you want to clear all demo bookings, safety reports and SOS alerts?\n\nUsers and the administrator account will NOT be deleted."
+                    );
+
+
+                if (!confirmed) {
+                    return;
+                }
+
+
+                localStorage.removeItem("bookings");
+                localStorage.removeItem("safetyReports");
+                localStorage.removeItem("sosAlerts");
+                localStorage.removeItem("latestTicket");
+                localStorage.removeItem("paymentRoute");
+
+
+                loadDashboard();
+
+
+                alert(
+                    "Demo activity has been cleared successfully."
+                );
+
+            });
+
+
+        /* =========================================================
+           LOGOUT
+        ========================================================= */
+
+        document
+            .getElementById("logoutBtn")
+            .addEventListener("click", function () {
+
+                localStorage.removeItem("currentUser");
+
+                window.location.href = "login.html";
+
+            });
+
+
+        /* =========================================================
+           INITIAL LOAD
+        ========================================================= */
+
+        loadDashboard();
+
+    </script>
+
+</body>
+</html>
