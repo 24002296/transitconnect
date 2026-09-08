@@ -1,0 +1,1144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment | TransitConnect</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f7fb;
+            color: #1f2937;
+        }
+
+        .navbar {
+            background: #0f172a;
+            color: white;
+            padding: 16px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .logo span {
+            color: #38bdf8;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .nav-links a:hover {
+            color: #38bdf8;
+        }
+
+        .page-header {
+            background: linear-gradient(135deg, #0f172a, #1e3a8a);
+            color: white;
+            padding: 45px 7%;
+        }
+
+        .page-header h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        .page-header p {
+            color: #dbeafe;
+        }
+
+        .container {
+            width: 86%;
+            max-width: 1150px;
+            margin: 35px auto;
+        }
+
+        .payment-layout {
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 25px;
+            align-items: start;
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 28px;
+            box-shadow: 0 8px 25px rgba(15, 23, 42, 0.08);
+        }
+
+        .card h2 {
+            margin-bottom: 20px;
+            color: #0f172a;
+        }
+
+        .summary {
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 18px;
+            margin-bottom: 25px;
+        }
+
+        .summary-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .transport-icon {
+            font-size: 32px;
+        }
+
+        .summary-title h3 {
+            margin-bottom: 4px;
+        }
+
+        .summary-title p {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 10px 0;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 14px;
+        }
+
+        .summary-row:last-child {
+            border-bottom: none;
+        }
+
+        .summary-row span:first-child {
+            color: #64748b;
+        }
+
+        .summary-row strong {
+            text-align: right;
+        }
+
+        .fare {
+            background: #eff6ff;
+            border-radius: 12px;
+            padding: 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .fare span {
+            color: #475569;
+        }
+
+        .fare strong {
+            color: #1d4ed8;
+            font-size: 25px;
+        }
+
+        .method-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .method {
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 18px 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.2s;
+            background: white;
+        }
+
+        .method:hover {
+            border-color: #60a5fa;
+        }
+
+        .method.active {
+            border-color: #2563eb;
+            background: #eff6ff;
+        }
+
+        .method-icon {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .method-name {
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 7px;
+            color: #334155;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 13px 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 9px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .two-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .payment-section {
+            display: none;
+        }
+
+        .payment-section.active {
+            display: block;
+        }
+
+        .info-box {
+            background: #f8fafc;
+            border-left: 4px solid #2563eb;
+            padding: 14px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            color: #475569;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .security-note {
+            display: flex;
+            gap: 10px;
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            color: #166534;
+            padding: 14px;
+            border-radius: 10px;
+            font-size: 13px;
+            margin-top: 20px;
+        }
+
+        .button {
+            width: 100%;
+            border: none;
+            border-radius: 10px;
+            padding: 15px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .pay-button {
+            background: #2563eb;
+            color: white;
+        }
+
+        .pay-button:hover {
+            background: #1d4ed8;
+        }
+
+        .back-button {
+            display: block;
+            text-align: center;
+            text-decoration: none;
+            background: #e2e8f0;
+            color: #334155;
+            padding: 13px;
+            border-radius: 10px;
+            margin-top: 12px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .back-button:hover {
+            background: #cbd5e1;
+        }
+
+        .notice {
+            text-align: center;
+            margin-top: 25px;
+            font-size: 13px;
+            color: #64748b;
+        }
+
+        .error {
+            display: none;
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #b91c1c;
+            padding: 13px;
+            border-radius: 8px;
+            margin-bottom: 18px;
+            font-size: 14px;
+        }
+
+        .success {
+            display: none;
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            color: #166534;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 18px;
+            font-size: 14px;
+        }
+
+        footer {
+            margin-top: 60px;
+            background: #0f172a;
+            color: #cbd5e1;
+            text-align: center;
+            padding: 25px;
+            font-size: 13px;
+        }
+
+        @media (max-width: 850px) {
+            .payment-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .nav-links {
+                display: none;
+            }
+
+            .page-header h1 {
+                font-size: 28px;
+            }
+
+            .method-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .two-columns {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                width: 92%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="logo">Transit<span>Connect</span></div>
+
+        <div class="nav-links">
+            <a href="dashboard.html">Dashboard</a>
+            <a href="journey-planner.html">Plan Journey</a>
+            <a href="my-trips.html">My Trips</a>
+            <a href="safety.html">Safety</a>
+        </div>
+    </nav>
+
+    <!-- HEADER -->
+    <section class="page-header">
+        <h1>Secure Payment</h1>
+        <p>Complete your booking and receive your digital ticket.</p>
+    </section>
+
+    <main class="container">
+
+        <div class="payment-layout">
+
+            <!-- PAYMENT FORM -->
+            <div class="card">
+
+                <h2>Choose Payment Method</h2>
+
+                <div id="errorMessage" class="error"></div>
+                <div id="successMessage" class="success"></div>
+
+                <div class="method-grid">
+
+                    <div class="method active" data-method="Bank Card">
+                        <div class="method-icon">💳</div>
+                        <div class="method-name">Bank Card</div>
+                    </div>
+
+                    <div class="method" data-method="Mobile Payment">
+                        <div class="method-icon">📱</div>
+                        <div class="method-name">Mobile Payment</div>
+                    </div>
+
+                    <div class="method" data-method="Digital Wallet">
+                        <div class="method-icon">👛</div>
+                        <div class="method-name">Digital Wallet</div>
+                    </div>
+
+                </div>
+
+                <form id="paymentForm">
+
+                    <!-- BANK CARD -->
+                    <div id="cardSection" class="payment-section active">
+
+                        <div class="info-box">
+                            <strong>Bank Card</strong><br>
+                            Enter your card information for this prototype payment.
+                            Card details are not stored in LocalStorage.
+                        </div>
+
+                        <div class="form-group">
+                            <label for="cardName">Cardholder Name</label>
+                            <input
+                                type="text"
+                                id="cardName"
+                                placeholder="Enter cardholder name"
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label for="cardNumber">Card Number</label>
+                            <input
+                                type="text"
+                                id="cardNumber"
+                                maxlength="19"
+                                placeholder="1234 5678 9012 3456"
+                            >
+                        </div>
+
+                        <div class="two-columns">
+
+                            <div class="form-group">
+                                <label for="expiry">Expiry Date</label>
+                                <input
+                                    type="text"
+                                    id="expiry"
+                                    maxlength="5"
+                                    placeholder="MM/YY"
+                                >
+                            </div>
+
+                            <div class="form-group">
+                                <label for="cvv">CVV</label>
+                                <input
+                                    type="password"
+                                    id="cvv"
+                                    maxlength="4"
+                                    placeholder="123"
+                                >
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <!-- MOBILE PAYMENT -->
+                    <div id="mobileSection" class="payment-section">
+
+                        <div class="info-box">
+                            <strong>Mobile Payment</strong><br>
+                            Enter a phone number to simulate a mobile payment.
+                        </div>
+
+                        <div class="form-group">
+                            <label for="mobileNumber">Mobile Number</label>
+                            <input
+                                type="tel"
+                                id="mobileNumber"
+                                placeholder="e.g. 071 234 5678"
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label for="mobileProvider">Payment Provider</label>
+                            <select id="mobileProvider">
+                                <option value="">Select provider</option>
+                                <option value="Mobile Money">Mobile Money</option>
+                                <option value="PayFast Mobile">PayFast Mobile</option>
+                                <option value="SnapScan">SnapScan</option>
+                            </select>
+                        </div>
+
+                    </div>
+
+                    <!-- DIGITAL WALLET -->
+                    <div id="walletSection" class="payment-section">
+
+                        <div class="info-box">
+                            <strong>Digital Wallet</strong><br>
+                            Enter your wallet identifier to simulate the payment.
+                        </div>
+
+                        <div class="form-group">
+                            <label for="walletEmail">Wallet Email</label>
+                            <input
+                                type="email"
+                                id="walletEmail"
+                                placeholder="example@email.com"
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label for="walletProvider">Wallet Provider</label>
+                            <select id="walletProvider">
+                                <option value="">Select wallet</option>
+                                <option value="PayPal">PayPal</option>
+                                <option value="Apple Pay">Apple Pay</option>
+                                <option value="Google Pay">Google Pay</option>
+                            </select>
+                        </div>
+
+                    </div>
+
+                    <div class="security-note">
+                        🔒
+                        <div>
+                            <strong>Prototype Security Notice</strong><br>
+                            This demonstration does not send money or store payment
+                            credentials. A real implementation would use a certified
+                            payment gateway and secure backend.
+                        </div>
+                    </div>
+
+                    <br>
+
+                    <button type="submit" class="button pay-button" id="payButton">
+                        Pay & Confirm Booking
+                    </button>
+
+                    <a href="journey-details.html" class="back-button">
+                        ← Back to Journey Details
+                    </a>
+
+                </form>
+
+            </div>
+
+            <!-- JOURNEY SUMMARY -->
+            <aside class="card">
+
+                <h2>Journey Summary</h2>
+
+                <div id="journeySummary">
+                    <!-- Filled by JavaScript -->
+                </div>
+
+                <div class="fare">
+                    <span>Total Fare</span>
+                    <strong id="totalFare">R0.00</strong>
+                </div>
+
+                <div class="notice">
+                    Your digital ticket will be generated after the
+                    simulated payment is completed.
+                </div>
+
+            </aside>
+
+        </div>
+
+    </main>
+
+    <footer>
+        <p>© 2026 TransitConnect. Frontend prototype for demonstration purposes.</p>
+    </footer>
+
+
+    <script>
+
+        // ==========================================
+        // AUTHENTICATION CHECK
+        // ==========================================
+
+        const currentUser =
+            JSON.parse(localStorage.getItem("currentUser"));
+
+        if (!currentUser) {
+            window.location.href = "login.html";
+        }
+
+
+        // ==========================================
+        // GET SELECTED JOURNEY
+        // ==========================================
+
+        const savedRoute =
+            localStorage.getItem("paymentRoute") ||
+            localStorage.getItem("selectedRoute");
+
+        const route = savedRoute
+            ? JSON.parse(savedRoute)
+            : null;
+
+        const travelDate =
+            localStorage.getItem("selectedTravelDate");
+
+
+        // ==========================================
+        // ELEMENTS
+        // ==========================================
+
+        const journeySummary =
+            document.getElementById("journeySummary");
+
+        const totalFare =
+            document.getElementById("totalFare");
+
+        const paymentForm =
+            document.getElementById("paymentForm");
+
+        const errorMessage =
+            document.getElementById("errorMessage");
+
+        const successMessage =
+            document.getElementById("successMessage");
+
+        const payButton =
+            document.getElementById("payButton");
+
+
+        // ==========================================
+        // CHECK JOURNEY
+        // ==========================================
+
+        if (!route) {
+
+            journeySummary.innerHTML = `
+                <div class="info-box">
+                    No journey has been selected.
+                    <br><br>
+                    Please return to the journey planner and select
+                    a journey first.
+                </div>
+
+                <a href="journey-planner.html" class="back-button">
+                    Go to Journey Planner
+                </a>
+            `;
+
+            totalFare.textContent = "R0.00";
+            paymentForm.style.display = "none";
+
+        } else {
+
+            const formattedDate = travelDate
+                ? new Date(travelDate + "T00:00:00").toLocaleDateString(
+                    "en-ZA",
+                    {
+                        day: "numeric",
+                        month: "long",
+                        year: "numeric"
+                    }
+                )
+                : "Not specified";
+
+            journeySummary.innerHTML = `
+
+                <div class="summary">
+
+                    <div class="summary-title">
+
+                        <div class="transport-icon">
+                            ${route.icon || "🚌"}
+                        </div>
+
+                        <div>
+                            <h3>${route.operator}</h3>
+                            <p>${route.type} Journey</p>
+                        </div>
+
+                    </div>
+
+                    <div class="summary-row">
+                        <span>From</span>
+                        <strong>${route.from}</strong>
+                    </div>
+
+                    <div class="summary-row">
+                        <span>To</span>
+                        <strong>${route.to}</strong>
+                    </div>
+
+                    <div class="summary-row">
+                        <span>Travel Date</span>
+                        <strong>${formattedDate}</strong>
+                    </div>
+
+                    <div class="summary-row">
+                        <span>Departure</span>
+                        <strong>${route.departure}</strong>
+                    </div>
+
+                    <div class="summary-row">
+                        <span>Arrival</span>
+                        <strong>${route.arrival}</strong>
+                    </div>
+
+                    <div class="summary-row">
+                        <span>Duration</span>
+                        <strong>${formatDuration(route.duration)}</strong>
+                    </div>
+
+                    <div class="summary-row">
+                        <span>Transfers</span>
+                        <strong>${route.transfers}</strong>
+                    </div>
+
+                </div>
+            `;
+
+            totalFare.textContent =
+                `R${Number(route.price).toFixed(2)}`;
+        }
+
+
+        // ==========================================
+        // FORMAT DURATION
+        // ==========================================
+
+        function formatDuration(minutes) {
+
+            if (!minutes) {
+                return "N/A";
+            }
+
+            const hours =
+                Math.floor(minutes / 60);
+
+            const mins =
+                minutes % 60;
+
+            if (hours === 0) {
+                return `${mins} min`;
+            }
+
+            if (mins === 0) {
+                return `${hours} hr`;
+            }
+
+            return `${hours} hr ${mins} min`;
+        }
+
+
+        // ==========================================
+        // PAYMENT METHODS
+        // ==========================================
+
+        const methods =
+            document.querySelectorAll(".method");
+
+        const cardSection =
+            document.getElementById("cardSection");
+
+        const mobileSection =
+            document.getElementById("mobileSection");
+
+        const walletSection =
+            document.getElementById("walletSection");
+
+        let selectedMethod = "Bank Card";
+
+
+        methods.forEach(method => {
+
+            method.addEventListener("click", () => {
+
+                methods.forEach(item => {
+                    item.classList.remove("active");
+                });
+
+                method.classList.add("active");
+
+                selectedMethod =
+                    method.dataset.method;
+
+                cardSection.classList.remove("active");
+                mobileSection.classList.remove("active");
+                walletSection.classList.remove("active");
+
+                if (selectedMethod === "Bank Card") {
+                    cardSection.classList.add("active");
+                }
+
+                if (selectedMethod === "Mobile Payment") {
+                    mobileSection.classList.add("active");
+                }
+
+                if (selectedMethod === "Digital Wallet") {
+                    walletSection.classList.add("active");
+                }
+
+                clearMessages();
+            });
+
+        });
+
+
+        // ==========================================
+        // CARD NUMBER FORMATTING
+        // ==========================================
+
+        const cardNumber =
+            document.getElementById("cardNumber");
+
+        cardNumber.addEventListener("input", function () {
+
+            let value =
+                this.value.replace(/\D/g, "");
+
+            value =
+                value.substring(0, 16);
+
+            let formatted = "";
+
+            for (let i = 0; i < value.length; i++) {
+
+                if (i > 0 && i % 4 === 0) {
+                    formatted += " ";
+                }
+
+                formatted += value[i];
+            }
+
+            this.value = formatted;
+        });
+
+
+        // ==========================================
+        // EXPIRY DATE FORMATTING
+        // ==========================================
+
+        const expiry =
+            document.getElementById("expiry");
+
+        expiry.addEventListener("input", function () {
+
+            let value =
+                this.value.replace(/\D/g, "");
+
+            value =
+                value.substring(0, 4);
+
+            if (value.length >= 3) {
+                value =
+                    value.substring(0, 2) +
+                    "/" +
+                    value.substring(2);
+            }
+
+            this.value = value;
+        });
+
+
+        // ==========================================
+        // VALIDATION
+        // ==========================================
+
+        function showError(message) {
+
+            errorMessage.textContent = message;
+            errorMessage.style.display = "block";
+
+            successMessage.style.display = "none";
+
+            window.scrollTo({
+                top: 250,
+                behavior: "smooth"
+            });
+        }
+
+
+        function clearMessages() {
+
+            errorMessage.style.display = "none";
+            successMessage.style.display = "none";
+
+        }
+
+
+        function validatePayment() {
+
+            if (!route) {
+                showError("No journey has been selected.");
+                return false;
+            }
+
+
+            // BANK CARD VALIDATION
+            if (selectedMethod === "Bank Card") {
+
+                const name =
+                    document.getElementById("cardName")
+                    .value.trim();
+
+                const number =
+                    document.getElementById("cardNumber")
+                    .value.replace(/\s/g, "");
+
+                const expiryValue =
+                    document.getElementById("expiry")
+                    .value.trim();
+
+                const cvv =
+                    document.getElementById("cvv")
+                    .value.trim();
+
+
+                if (!name) {
+                    showError("Please enter the cardholder name.");
+                    return false;
+                }
+
+
+                if (!/^\d{16}$/.test(number)) {
+                    showError(
+                        "Please enter a valid 16-digit card number."
+                    );
+                    return false;
+                }
+
+
+                if (!/^\d{2}\/\d{2}$/.test(expiryValue)) {
+                    showError(
+                        "Please enter the expiry date in MM/YY format."
+                    );
+                    return false;
+                }
+
+
+                if (!/^\d{3,4}$/.test(cvv)) {
+                    showError(
+                        "Please enter a valid CVV."
+                    );
+                    return false;
+                }
+            }
+
+
+            // MOBILE PAYMENT VALIDATION
+            if (selectedMethod === "Mobile Payment") {
+
+                const mobile =
+                    document.getElementById("mobileNumber")
+                    .value.trim();
+
+                const provider =
+                    document.getElementById("mobileProvider")
+                    .value;
+
+
+                if (!mobile) {
+                    showError(
+                        "Please enter your mobile number."
+                    );
+                    return false;
+                }
+
+
+                if (!provider) {
+                    showError(
+                        "Please select a mobile payment provider."
+                    );
+                    return false;
+                }
+            }
+
+
+            // DIGITAL WALLET VALIDATION
+            if (selectedMethod === "Digital Wallet") {
+
+                const email =
+                    document.getElementById("walletEmail")
+                    .value.trim();
+
+                const provider =
+                    document.getElementById("walletProvider")
+                    .value;
+
+
+                if (!email) {
+                    showError(
+                        "Please enter your wallet email."
+                    );
+                    return false;
+                }
+
+
+                if (!email.includes("@")) {
+                    showError(
+                        "Please enter a valid wallet email."
+                    );
+                    return false;
+                }
+
+
+                if (!provider) {
+                    showError(
+                        "Please select a wallet provider."
+                    );
+                    return false;
+                }
+            }
+
+
+            return true;
+        }
+
+
+        // ==========================================
+        // CREATE BOOKING
+        // ==========================================
+
+        paymentForm.addEventListener("submit", function(event) {
+
+            event.preventDefault();
+
+            clearMessages();
+
+
+            if (!validatePayment()) {
+                return;
+            }
+
+
+            payButton.disabled = true;
+            payButton.textContent =
+                "Processing Payment...";
+
+
+            // Simulate payment processing
+            setTimeout(() => {
+
+                const bookingId =
+                    "BK-" +
+                    Date.now() +
+                    "-" +
+                    Math.floor(Math.random() * 1000);
+
+                const ticketId =
+                    "TC-" +
+                    Date.now() +
+                    "-" +
+                    Math.floor(Math.random() * 1000);
+
+
+                const booking = {
+
+                    id: bookingId,
+
+                    ticketId: ticketId,
+
+                    userId: currentUser.id,
+
+                    userName: currentUser.name,
+
+                    route: route,
+
+                    travelDate:
+                        travelDate || "",
+
+                    method:
+                        selectedMethod,
+
+                    paidAt:
+                        new Date().toISOString(),
+
+                    status: "Paid"
+                };
+
+
+                // Get existing bookings
+                let bookings =
+                    JSON.parse(
+                        localStorage.getItem("bookings") || "[]"
+                    );
+
+
+                // Add newest booking first
+                bookings.unshift(booking);
+
+
+                // Save booking
+                localStorage.setItem(
+                    "bookings",
+                    JSON.stringify(bookings)
+                );
+
+
+                // Save latest ticket
+                localStorage.setItem(
+                    "latestTicket",
+                    JSON.stringify(booking)
+                );
+
+
+                // Remove temporary payment route
+                localStorage.removeItem("paymentRoute");
+
+
+                successMessage.textContent =
+                    "Payment successful! Your digital ticket is being generated...";
+
+                successMessage.style.display = "block";
+
+
+                payButton.textContent =
+                    "Payment Successful";
+
+
+                // Go to ticket
+                setTimeout(() => {
+
+                    window.location.href =
+                        "ticket.html";
+
+                }, 1200);
+
+            }, 1000);
+
+        });
+
+    </script>
+
+</body>
+</html>

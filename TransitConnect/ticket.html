@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Ticket | TransitConnect</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f1f5f9;
+            color: #1e293b;
+        }
+
+        .navbar {
+            background: #0f172a;
+            color: white;
+            padding: 16px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .logo span {
+            color: #38bdf8;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .nav-links a:hover {
+            color: #38bdf8;
+        }
+
+        .page-header {
+            background: linear-gradient(135deg, #0f172a, #1e3a8a);
+            color: white;
+            text-align: center;
+            padding: 45px 20px;
+        }
+
+        .page-header h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        .page-header p {
+            color: #dbeafe;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 850px;
+            margin: 35px auto 60px;
+        }
+
+        .success-message {
+            text-align: center;
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            color: #166534;
+            padding: 16px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+        }
+
+        .ticket {
+            background: white;
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 12px 35px rgba(15, 23, 42, 0.12);
+        }
+
+        .ticket-header {
+            background: #2563eb;
+            color: white;
+            padding: 25px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .ticket-brand {
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .ticket-brand span {
+            color: #bae6fd;
+        }
+
+        .paid-badge {
+            background: #dcfce7;
+            color: #166534;
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .ticket-main {
+            padding: 30px;
+        }
+
+        .route-section {
+            display: grid;
+            grid-template-columns: 1fr 70px 1fr;
+            align-items: center;
+            gap: 15px;
+            padding: 20px 0 30px;
+            border-bottom: 1px dashed #cbd5e1;
+        }
+
+        .location h2 {
+            font-size: 24px;
+            color: #0f172a;
+            margin-bottom: 7px;
+        }
+
+        .location p {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .location.right {
+            text-align: right;
+        }
+
+        .arrow {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            background: #eff6ff;
+            color: #2563eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin: auto;
+        }
+
+        .journey-info {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            padding: 25px 0;
+            border-bottom: 1px dashed #cbd5e1;
+        }
+
+        .info-item {
+            padding: 15px;
+            background: #f8fafc;
+            border-radius: 10px;
+        }
+
+        .info-item span {
+            display: block;
+            color: #64748b;
+            font-size: 12px;
+            margin-bottom: 7px;
+        }
+
+        .info-item strong {
+            color: #0f172a;
+            font-size: 14px;
+        }
+
+        .transport-section {
+            padding: 25px 0;
+            border-bottom: 1px dashed #cbd5e1;
+        }
+
+        .section-title {
+            font-size: 15px;
+            color: #475569;
+            margin-bottom: 15px;
+        }
+
+        .transport {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .transport-icon {
+            width: 48px;
+            height: 48px;
+            background: #eff6ff;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 25px;
+        }
+
+        .transport-info strong {
+            display: block;
+            color: #0f172a;
+            margin-bottom: 4px;
+        }
+
+        .transport-info span {
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        .ticket-bottom {
+            display: grid;
+            grid-template-columns: 1fr 180px;
+            gap: 30px;
+            padding: 30px;
+        }
+
+        .details h3 {
+            margin-bottom: 18px;
+            color: #0f172a;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 9px 0;
+            font-size: 14px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .detail-row span {
+            color: #64748b;
+        }
+
+        .detail-row strong {
+            text-align: right;
+        }
+
+        .fare-box {
+            background: #eff6ff;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            margin-top: 18px;
+        }
+
+        .fare-box span {
+            display: block;
+            color: #64748b;
+            font-size: 13px;
+            margin-bottom: 7px;
+        }
+
+        .fare-box strong {
+            color: #1d4ed8;
+            font-size: 27px;
+        }
+
+        .qr-section {
+            text-align: center;
+        }
+
+        .qr-section h3 {
+            font-size: 14px;
+            color: #334155;
+            margin-bottom: 12px;
+        }
+
+        .qr-code {
+            width: 145px;
+            height: 145px;
+            margin: auto;
+            padding: 10px;
+            background: white;
+            border: 1px solid #cbd5e1;
+            display: grid;
+            grid-template-columns: repeat(9, 1fr);
+            grid-template-rows: repeat(9, 1fr);
+            gap: 2px;
+        }
+
+        .qr-cell {
+            background: #0f172a;
+        }
+
+        .qr-cell.empty {
+            background: white;
+        }
+
+        .ticket-id {
+            font-size: 11px;
+            color: #64748b;
+            margin-top: 12px;
+            word-break: break-all;
+        }
+
+        .qr-note {
+            font-size: 11px;
+            color: #94a3b8;
+            margin-top: 7px;
+        }
+
+        .actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .button {
+            padding: 14px 20px;
+            border-radius: 9px;
+            text-align: center;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 14px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .primary {
+            background: #2563eb;
+            color: white;
+        }
+
+        .primary:hover {
+            background: #1d4ed8;
+        }
+
+        .secondary {
+            background: #e2e8f0;
+            color: #334155;
+        }
+
+        .secondary:hover {
+            background: #cbd5e1;
+        }
+
+        .no-ticket {
+            background: white;
+            padding: 45px 30px;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(15, 23, 42, 0.08);
+        }
+
+        .no-ticket h2 {
+            margin-bottom: 10px;
+        }
+
+        .no-ticket p {
+            color: #64748b;
+            margin-bottom: 25px;
+        }
+
+        footer {
+            background: #0f172a;
+            color: #cbd5e1;
+            text-align: center;
+            padding: 25px;
+            font-size: 13px;
+        }
+
+        @media print {
+
+            body {
+                background: white;
+            }
+
+            .navbar,
+            .page-header,
+            .success-message,
+            .actions,
+            footer {
+                display: none !important;
+            }
+
+            .container {
+                width: 100%;
+                max-width: none;
+                margin: 0;
+            }
+
+            .ticket {
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
+        }
+
+        @media (max-width: 650px) {
+
+            .nav-links {
+                display: none;
+            }
+
+            .page-header h1 {
+                font-size: 28px;
+            }
+
+            .ticket-header {
+                padding: 20px;
+            }
+
+            .ticket-main {
+                padding: 20px;
+            }
+
+            .route-section {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .location.right {
+                text-align: center;
+            }
+
+            .arrow {
+                transform: rotate(90deg);
+            }
+
+            .journey-info {
+                grid-template-columns: 1fr;
+            }
+
+            .ticket-bottom {
+                grid-template-columns: 1fr;
+                padding: 20px;
+            }
+
+            .actions {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVIGATION -->
+    <nav class="navbar">
+
+        <div class="logo">
+            Transit<span>Connect</span>
+        </div>
+
+        <div class="nav-links">
+            <a href="dashboard.html">Dashboard</a>
+            <a href="journey-planner.html">Plan Journey</a>
+            <a href="my-trips.html">My Trips</a>
+            <a href="safety.html">Safety</a>
+        </div>
+
+    </nav>
+
+
+    <!-- PAGE HEADER -->
+    <section class="page-header">
+
+        <h1>Your Digital Ticket</h1>
+
+        <p>
+            Your journey has been successfully booked.
+        </p>
+
+    </section>
+
+
+    <main class="container">
+
+        <div class="success-message">
+            ✓ Payment successful — your TransitConnect ticket is confirmed.
+        </div>
+
+
+        <!-- TICKET -->
+        <div id="ticketContainer">
+
+            <!-- Ticket generated by JavaScript -->
+
+        </div>
+
+
+        <!-- ACTION BUTTONS -->
+        <div class="actions">
+
+            <button
+                class="button primary"
+                onclick="printTicket()">
+                🖨 Print Ticket
+            </button>
+
+            <a
+                href="my-trips.html"
+                class="button secondary">
+                View My Trips
+            </a>
+
+        </div>
+
+    </main>
+
+
+    <footer>
+
+        <p>
+            © 2026 TransitConnect. Frontend prototype for demonstration purposes.
+        </p>
+
+    </footer>
+
+
+    <script>
+
+        // ==========================================
+        // AUTHENTICATION
+        // ==========================================
+
+        const currentUser =
+            JSON.parse(localStorage.getItem("currentUser"));
+
+        if (!currentUser) {
+            window.location.href = "login.html";
+        }
+
+
+        // ==========================================
+        // GET LATEST TICKET
+        // ==========================================
+
+        const savedTicket =
+            localStorage.getItem("latestTicket");
+
+        const ticketContainer =
+            document.getElementById("ticketContainer");
+
+
+        // ==========================================
+        // NO TICKET
+        // ==========================================
+
+        if (!savedTicket) {
+
+            ticketContainer.innerHTML = `
+
+                <div class="no-ticket">
+
+                    <h2>No Ticket Found</h2>
+
+                    <p>
+                        You do not currently have a recently generated
+                        digital ticket.
+                    </p>
+
+                    <a
+                        href="journey-planner.html"
+                        class="button primary">
+                        Plan a Journey
+                    </a>
+
+                </div>
+
+            `;
+
+        } else {
+
+            const ticket =
+                JSON.parse(savedTicket);
+
+            const route =
+                ticket.route;
+
+
+            // ==========================================
+            // FORMAT DATE
+            // ==========================================
+
+            let formattedDate = "Not specified";
+
+            if (ticket.travelDate) {
+
+                formattedDate =
+                    new Date(
+                        ticket.travelDate + "T00:00:00"
+                    ).toLocaleDateString(
+                        "en-ZA",
+                        {
+                            weekday: "short",
+                            day: "numeric",
+                            month: "long",
+                            year: "numeric"
+                        }
+                    );
+            }
+
+
+            // ==========================================
+            // FORMAT PAYMENT DATE
+            // ==========================================
+
+            let paymentDate = "Not available";
+
+            if (ticket.paidAt) {
+
+                paymentDate =
+                    new Date(ticket.paidAt)
+                    .toLocaleString(
+                        "en-ZA",
+                        {
+                            day: "numeric",
+                            month: "short",
+                            year: "numeric",
+                            hour: "2-digit",
+                            minute: "2-digit"
+                        }
+                    );
+            }
+
+
+            // ==========================================
+            // FORMAT DURATION
+            // ==========================================
+
+            function formatDuration(minutes) {
+
+                if (!minutes) {
+                    return "N/A";
+                }
+
+                const hours =
+                    Math.floor(minutes / 60);
+
+                const mins =
+                    minutes % 60;
+
+                if (hours === 0) {
+                    return `${mins} min`;
+                }
+
+                if (mins === 0) {
+                    return `${hours} hr`;
+                }
+
+                return `${hours} hr ${mins} min`;
+            }
+
+
+            // ==========================================
+            // QR-STYLE PATTERN
+            // ==========================================
+
+            function generateQR(ticketId) {
+
+                let hash = 0;
+
+                for (let i = 0; i < ticketId.length; i++) {
+                    hash =
+                        ((hash << 5) - hash) +
+                        ticketId.charCodeAt(i);
+
+                    hash |= 0;
+                }
+
+
+                let html = "";
+
+                for (let i = 0; i < 81; i++) {
+
+                    const value =
+                        Math.abs(
+                            hash +
+                            (i * 31)
+                        ) % 5;
+
+                    const isFinderArea =
+                        (
+                            i < 21 ||
+                            (i % 9 < 3 && i > 53)
+                        );
+
+                    const active =
+                        isFinderArea
+                            ? value !== 1
+                            : value === 0 ||
+                              value === 2 ||
+                              value === 4;
+
+                    html += `
+                        <div class="qr-cell ${
+                            active ? "" : "empty"
+                        }"></div>
+                    `;
+                }
+
+                return html;
+            }
+
+
+            // ==========================================
+            // DISPLAY TRANSPORT
+            // ==========================================
+
+            let transportIcon =
+                route.icon || "🚌";
+
+            let transportName =
+                route.type || "Public Transport";
+
+
+            // ==========================================
+            // DISPLAY TICKET
+            // ==========================================
+
+            ticketContainer.innerHTML = `
+
+                <div class="ticket">
+
+                    <!-- TICKET HEADER -->
+                    <div class="ticket-header">
+
+                        <div class="ticket-brand">
+                            Transit<span>Connect</span>
+                        </div>
+
+                        <div class="paid-badge">
+                            ✓ PAID
+                        </div>
+
+                    </div>
+
+
+                    <!-- MAIN TICKET -->
+                    <div class="ticket-main">
+
+
+                        <!-- ROUTE -->
+                        <div class="route-section">
+
+                            <div class="location">
+
+                                <h2>
+                                    ${route.from}
+                                </h2>
+
+                                <p>
+                                    Departure:
+                                    <strong>
+                                        ${route.departure}
+                                    </strong>
+                                </p>
+
+                            </div>
+
+
+                            <div class="arrow">
+                                →
+                            </div>
+
+
+                            <div class="location right">
+
+                                <h2>
+                                    ${route.to}
+                                </h2>
+
+                                <p>
+                                    Arrival:
+                                    <strong>
+                                        ${route.arrival}
+                                    </strong>
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- JOURNEY INFORMATION -->
+                        <div class="journey-info">
+
+                            <div class="info-item">
+
+                                <span>Travel Date</span>
+
+                                <strong>
+                                    ${formattedDate}
+                                </strong>
+
+                            </div>
+
+
+                            <div class="info-item">
+
+                                <span>Duration</span>
+
+                                <strong>
+                                    ${formatDuration(route.duration)}
+                                </strong>
+
+                            </div>
+
+
+                            <div class="info-item">
+
+                                <span>Transfers</span>
+
+                                <strong>
+                                    ${route.transfers}
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- TRANSPORT -->
+                        <div class="transport-section">
+
+                            <div class="section-title">
+                                Transport Service
+                            </div>
+
+                            <div class="transport">
+
+                                <div class="transport-icon">
+                                    ${transportIcon}
+                                </div>
+
+                                <div class="transport-info">
+
+                                    <strong>
+                                        ${route.operator}
+                                    </strong>
+
+                                    <span>
+                                        ${transportName}
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- TICKET BOTTOM -->
+                    <div class="ticket-bottom">
+
+
+                        <!-- DETAILS -->
+                        <div class="details">
+
+                            <h3>
+                                Passenger & Booking Details
+                            </h3>
+
+
+                            <div class="detail-row">
+
+                                <span>
+                                    Passenger
+                                </span>
+
+                                <strong>
+                                    ${ticket.userName}
+                                </strong>
+
+                            </div>
+
+
+                            <div class="detail-row">
+
+                                <span>
+                                    Ticket ID
+                                </span>
+
+                                <strong>
+                                    ${ticket.ticketId}
+                                </strong>
+
+                            </div>
+
+
+                            <div class="detail-row">
+
+                                <span>
+                                    Booking ID
+                                </span>
+
+                                <strong>
+                                    ${ticket.id}
+                                </strong>
+
+                            </div>
+
+
+                            <div class="detail-row">
+
+                                <span>
+                                    Payment Method
+                                </span>
+
+                                <strong>
+                                    ${ticket.method}
+                                </strong>
+
+                            </div>
+
+
+                            <div class="detail-row">
+
+                                <span>
+                                    Payment Date
+                                </span>
+
+                                <strong>
+                                    ${paymentDate}
+                                </strong>
+
+                            </div>
+
+
+                            <div class="fare-box">
+
+                                <span>
+                                    Total Fare
+                                </span>
+
+                                <strong>
+                                    R${Number(route.price).toFixed(2)}
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- QR CODE -->
+                        <div class="qr-section">
+
+                            <h3>
+                                Ticket Code
+                            </h3>
+
+                            <div class="qr-code">
+
+                                ${generateQR(ticket.ticketId)}
+
+                            </div>
+
+                            <div class="ticket-id">
+                                ${ticket.ticketId}
+                            </div>
+
+                            <div class="qr-note">
+                                QR-style prototype
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+            `;
+
+        }
+
+
+        // ==========================================
+        // PRINT TICKET
+        // ==========================================
+
+        function printTicket() {
+
+            window.print();
+
+        }
+
+    </script>
+
+</body>
+</html>
