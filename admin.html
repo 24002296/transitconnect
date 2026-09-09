@@ -1,1539 +1,2737 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard | TransitConnect</title>
-
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: Arial, Helvetica, sans-serif;
-            background: #f4f7fb;
-            color: #172033;
-            line-height: 1.6;
-        }
-
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
-
-        button {
-            font-family: inherit;
-        }
-
-        /* ================= NAVBAR ================= */
-
-        .navbar {
-            background: #ffffff;
-            border-bottom: 1px solid #e5e9f2;
-            padding: 16px 5%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 22px;
-            font-weight: 800;
-            color: #172033;
-        }
-
-        .logo-icon {
-            width: 42px;
-            height: 42px;
-            background: #2563eb;
-            color: white;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 21px;
-        }
-
-        .nav-right {
-            display: flex;
-            align-items: center;
-            gap: 18px;
-        }
-
-        .admin-label {
-            background: #eef4ff;
-            color: #2563eb;
-            padding: 7px 13px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 700;
-        }
-
-        .logout-btn {
-            border: none;
-            background: #fee2e2;
-            color: #dc2626;
-            padding: 9px 15px;
-            border-radius: 9px;
-            font-weight: 700;
-            cursor: pointer;
-        }
-
-        .logout-btn:hover {
-            background: #fecaca;
-        }
-
-        /* ================= MAIN ================= */
-
-        .container {
-            width: 90%;
-            max-width: 1400px;
-            margin: auto;
-        }
-
-        .page-header {
-            padding: 38px 0 25px;
-        }
-
-        .page-header h1 {
-            font-size: 32px;
-            margin-bottom: 6px;
-        }
-
-        .page-header p {
-            color: #697386;
-        }
-
-        .admin-tag {
-            display: inline-block;
-            margin-top: 12px;
-            background: #e0ecff;
-            color: #1d4ed8;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 700;
-        }
-
-        /* ================= STATS ================= */
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 18px;
-            margin-bottom: 30px;
-        }
-
-        .stat-card {
-            background: white;
-            border: 1px solid #e6eaf0;
-            border-radius: 16px;
-            padding: 22px;
-            box-shadow: 0 4px 15px rgba(15, 23, 42, 0.04);
-        }
-
-        .stat-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-        }
-
-        .stat-icon {
-            width: 44px;
-            height: 44px;
-            border-radius: 12px;
-            background: #eef4ff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 21px;
-        }
-
-        .stat-card h3 {
-            font-size: 29px;
-            margin-bottom: 2px;
-        }
-
-        .stat-card p {
-            color: #7a8495;
-            font-size: 14px;
-        }
-
-        /* ================= ACTION BAR ================= */
-
-        .action-bar {
-            background: white;
-            border: 1px solid #e6eaf0;
-            border-radius: 15px;
-            padding: 16px 18px;
-            margin-bottom: 28px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .action-bar p {
-            color: #687386;
-            font-size: 14px;
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            border: none;
-            padding: 10px 16px;
-            border-radius: 9px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .btn-primary {
-            background: #2563eb;
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: #1d4ed8;
-        }
-
-        .btn-danger {
-            background: #fee2e2;
-            color: #dc2626;
-        }
-
-        .btn-danger:hover {
-            background: #fecaca;
-        }
-
-        /* ================= SECTION ================= */
-
-        .section {
-            background: white;
-            border: 1px solid #e6eaf0;
-            border-radius: 16px;
-            margin-bottom: 28px;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(15, 23, 42, 0.03);
-        }
-
-        .section-header {
-            padding: 20px 22px;
-            border-bottom: 1px solid #edf0f5;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .section-header h2 {
-            font-size: 19px;
-        }
-
-        .section-header p {
-            color: #7a8495;
-            font-size: 13px;
-            margin-top: 2px;
-        }
-
-        .count-badge {
-            background: #eef4ff;
-            color: #2563eb;
-            padding: 5px 10px;
-            border-radius: 15px;
-            font-size: 12px;
-            font-weight: 700;
-        }
-
-        /* ================= TABLE ================= */
-
-        .table-wrapper {
-            width: 100%;
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 800px;
-        }
-
-        th,
-        td {
-            padding: 14px 18px;
-            text-align: left;
-            border-bottom: 1px solid #edf0f5;
-            font-size: 13px;
-            vertical-align: top;
-        }
-
-        th {
-            background: #f8fafc;
-            color: #566174;
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-        }
-
-        tr:last-child td {
-            border-bottom: none;
-        }
-
-        tbody tr:hover {
-            background: #fafcff;
-        }
-
-        .name-cell {
-            font-weight: 700;
-            color: #172033;
-        }
-
-        .muted {
-            color: #7a8495;
-        }
-
-        .status {
-            display: inline-block;
-            padding: 5px 9px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 700;
-        }
-
-        .status-paid,
-        .status-submitted,
-        .status-active {
-            background: #dcfce7;
-            color: #15803d;
-        }
-
-        .status-alert {
-            background: #fee2e2;
-            color: #b91c1c;
-        }
-
-        .status-admin {
-            background: #ede9fe;
-            color: #6d28d9;
-        }
-
-        .status-passenger {
-            background: #e0f2fe;
-            color: #0369a1;
-        }
-
-        .fare {
-            font-weight: 800;
-            color: #15803d;
-        }
-
-        .route-cell {
-            min-width: 180px;
-        }
-
-        .route-arrow {
-            color: #2563eb;
-            margin: 0 5px;
-        }
-
-        /* ================= EMPTY ================= */
-
-        .empty {
-            text-align: center;
-            padding: 35px 20px;
-            color: #7a8495;
-        }
-
-        .empty-icon {
-            font-size: 32px;
-            margin-bottom: 8px;
-        }
-
-        /* ================= SAFETY ================= */
-
-        .safety-summary {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 18px;
-            padding: 20px;
-        }
-
-        .safety-box {
-            border: 1px solid #e8edf4;
-            border-radius: 12px;
-            padding: 18px;
-            background: #fbfcfe;
-        }
-
-        .safety-box h3 {
-            font-size: 16px;
-            margin-bottom: 5px;
-        }
-
-        .safety-box p {
-            font-size: 13px;
-            color: #718096;
-        }
-
-        /* ================= FOOTER ================= */
-
-        footer {
-            text-align: center;
-            padding: 35px 20px;
-            color: #7a8495;
-            font-size: 13px;
-        }
-
-        /* ================= RESPONSIVE ================= */
-
-        @media (max-width: 1000px) {
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (max-width: 700px) {
-            .navbar {
-                padding: 13px 4%;
-            }
-
-            .logo {
-                font-size: 18px;
-            }
-
-            .logo-icon {
-                width: 37px;
-                height: 37px;
-            }
-
-            .admin-label {
-                display: none;
-            }
-
-            .container {
-                width: 92%;
-            }
-
-            .page-header h1 {
-                font-size: 27px;
-            }
-
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .action-bar {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .safety-summary {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Admin Dashboard | TransitConnect</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    background:#f4f7fb;
+    color:#172033;
+    line-height:1.6;
+}
+
+a{
+    text-decoration:none;
+    color:inherit;
+}
+
+button,
+input,
+select,
+textarea{
+    font-family:inherit;
+}
+
+.navbar{
+    background:#fff;
+    border-bottom:1px solid #e5e9f2;
+    padding:16px 5%;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    position:sticky;
+    top:0;
+    z-index:100;
+}
+
+.logo{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-size:22px;
+    font-weight:800;
+}
+
+.logo-icon{
+    width:42px;
+    height:42px;
+    background:#2563eb;
+    color:#fff;
+    border-radius:12px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.nav-right{
+    display:flex;
+    align-items:center;
+    gap:15px;
+}
+
+.admin-label{
+    background:#eef4ff;
+    color:#2563eb;
+    padding:7px 13px;
+    border-radius:20px;
+    font-size:13px;
+    font-weight:700;
+}
+
+.logout-btn{
+    border:none;
+    background:#fee2e2;
+    color:#dc2626;
+    padding:9px 15px;
+    border-radius:9px;
+    font-weight:700;
+    cursor:pointer;
+}
+
+.container{
+    width:90%;
+    max-width:1400px;
+    margin:auto;
+}
+
+.page-header{
+    padding:38px 0 25px;
+}
+
+.page-header h1{
+    font-size:32px;
+    margin-bottom:6px;
+}
+
+.page-header p{
+    color:#697386;
+}
+
+.admin-tag{
+    display:inline-block;
+    margin-top:12px;
+    background:#e0ecff;
+    color:#1d4ed8;
+    padding:6px 12px;
+    border-radius:20px;
+    font-size:12px;
+    font-weight:700;
+}
+
+/* STATS */
+
+.stats-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:18px;
+    margin-bottom:30px;
+}
+
+.stat-card{
+    background:#fff;
+    border:1px solid #e6eaf0;
+    border-radius:16px;
+    padding:22px;
+    box-shadow:0 4px 15px rgba(15,23,42,.04);
+}
+
+.stat-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.stat-icon{
+    width:44px;
+    height:44px;
+    border-radius:12px;
+    background:#eef4ff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:21px;
+}
+
+.stat-card h3{
+    font-size:28px;
+}
+
+.stat-card p{
+    color:#7a8495;
+    font-size:14px;
+}
+
+/* SECTION */
+
+.section{
+    background:#fff;
+    border:1px solid #e6eaf0;
+    border-radius:16px;
+    margin-bottom:28px;
+    overflow:hidden;
+    box-shadow:0 4px 15px rgba(15,23,42,.03);
+}
+
+.section-header{
+    padding:20px 22px;
+    border-bottom:1px solid #edf0f5;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.section-header h2{
+    font-size:19px;
+}
+
+.section-header p{
+    color:#7a8495;
+    font-size:13px;
+}
+
+.count-badge{
+    background:#eef4ff;
+    color:#2563eb;
+    padding:5px 10px;
+    border-radius:15px;
+    font-size:12px;
+    font-weight:700;
+}
+
+/* FORM */
+
+.form-container{
+    padding:22px;
+    background:#fbfcfe;
+    border-bottom:1px solid #edf0f5;
+}
+
+.form-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:16px;
+}
+
+.form-group{
+    display:flex;
+    flex-direction:column;
+}
+
+.form-group.full{
+    grid-column:1/-1;
+}
+
+.form-group label{
+    font-size:13px;
+    font-weight:700;
+    margin-bottom:6px;
+}
+
+.form-group input,
+.form-group select{
+    padding:11px 12px;
+    border:1px solid #dce2eb;
+    border-radius:9px;
+    outline:none;
+    background:#fff;
+}
+
+.form-group input:focus,
+.form-group select:focus{
+    border-color:#2563eb;
+}
+
+.checkbox-group{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin-top:10px;
+}
+
+.form-actions{
+    margin-top:18px;
+    display:flex;
+    gap:10px;
+}
+
+.btn{
+    border:none;
+    padding:10px 16px;
+    border-radius:9px;
+    font-weight:700;
+    cursor:pointer;
+}
+
+.btn-primary{
+    background:#2563eb;
+    color:#fff;
+}
+
+.btn-primary:hover{
+    background:#1d4ed8;
+}
+
+.btn-secondary{
+    background:#e9edf3;
+    color:#374151;
+}
+
+.btn-danger{
+    background:#fee2e2;
+    color:#dc2626;
+}
+
+.btn-small{
+    padding:7px 10px;
+    font-size:12px;
+}
+
+/* TABLE */
+
+.table-wrapper{
+    width:100%;
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    min-width:850px;
+}
+
+th,
+td{
+    padding:14px 18px;
+    text-align:left;
+    border-bottom:1px solid #edf0f5;
+    font-size:13px;
+    vertical-align:middle;
+}
+
+th{
+    background:#f8fafc;
+    color:#566174;
+    font-size:12px;
+    text-transform:uppercase;
+}
+
+tbody tr:hover{
+    background:#fafcff;
+}
+
+.name-cell{
+    font-weight:700;
+}
+
+.muted{
+    color:#7a8495;
+}
+
+.status{
+    display:inline-block;
+    padding:5px 9px;
+    border-radius:20px;
+    font-size:11px;
+    font-weight:700;
+}
+
+.status-paid,
+.status-active,
+.status-available,
+.status-ontime{
+    background:#dcfce7;
+    color:#15803d;
+}
+
+.status-alert{
+    background:#fee2e2;
+    color:#b91c1c;
+}
+
+.status-admin{
+    background:#ede9fe;
+    color:#6d28d9;
+}
+
+.status-passenger{
+    background:#e0f2fe;
+    color:#0369a1;
+}
+
+.status-delayed{
+    background:#fef3c7;
+    color:#92400e;
+}
+
+.status-inactive{
+    background:#e5e7eb;
+    color:#4b5563;
+}
+
+.route-cell{
+    min-width:200px;
+}
+
+.route-arrow{
+    color:#2563eb;
+    margin:0 5px;
+}
+
+.fare{
+    font-weight:800;
+    color:#15803d;
+}
+
+.action-buttons{
+    display:flex;
+    gap:7px;
+}
+
+.empty{
+    text-align:center;
+    padding:35px 20px;
+    color:#7a8495;
+}
+
+.empty-icon{
+    font-size:32px;
+    margin-bottom:8px;
+}
+
+/* SUMMARY */
+
+.summary-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:18px;
+    padding:20px;
+}
+
+.summary-box{
+    border:1px solid #e8edf4;
+    border-radius:12px;
+    padding:18px;
+    background:#fbfcfe;
+}
+
+.summary-box h3{
+    font-size:16px;
+    margin-bottom:5px;
+}
+
+.summary-box p{
+    font-size:13px;
+    color:#718096;
+}
+
+footer{
+    text-align:center;
+    padding:35px 20px;
+    color:#7a8495;
+    font-size:13px;
+}
+
+@media(max-width:1000px){
+
+    .stats-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+}
+
+@media(max-width:700px){
+
+    .stats-grid{
+        grid-template-columns:1fr;
+    }
+
+    .form-grid{
+        grid-template-columns:1fr;
+    }
+
+    .form-group.full{
+        grid-column:auto;
+    }
+
+    .summary-grid{
+        grid-template-columns:1fr;
+    }
+
+    .admin-label{
+        display:none;
+    }
+
+    .page-header h1{
+        font-size:27px;
+    }
+
+}
+
+</style>
 </head>
 
 <body>
 
-    <!-- ================= NAVBAR ================= -->
+<!-- NAVBAR -->
 
-    <nav class="navbar">
-        <a href="admin.html" class="logo">
-            <span class="logo-icon">🚆</span>
-            <span>TransitConnect</span>
-        </a>
+<nav class="navbar">
 
-        <div class="nav-right">
-            <span class="admin-label">Administrator</span>
-            <button class="logout-btn" id="logoutBtn">Logout</button>
+    <a href="admin.html" class="logo">
+        <span class="logo-icon">🚆</span>
+        <span>TransitConnect</span>
+    </a>
+
+    <div class="nav-right">
+
+        <span class="admin-label">
+            Administrator
+        </span>
+
+        <button class="logout-btn" id="logoutBtn">
+            Logout
+        </button>
+
+    </div>
+
+</nav>
+
+
+<main class="container">
+
+<!-- HEADER -->
+
+<section class="page-header">
+
+    <h1>Admin Dashboard</h1>
+
+    <p>
+        Manage journeys, passengers, bookings, revenue and safety activity.
+    </p>
+
+    <span class="admin-tag">
+        🔐 ADMINISTRATOR CONTROL PANEL
+    </span>
+
+</section>
+
+
+<!-- STATS -->
+
+<section class="stats-grid">
+
+    <div class="stat-card">
+
+        <div class="stat-top">
+
+            <div>
+                <h3 id="totalUsers">0</h3>
+                <p>Total Users</p>
+            </div>
+
+            <div class="stat-icon">
+                👥
+            </div>
+
         </div>
-    </nav>
+
+    </div>
 
 
-    <main class="container">
+    <div class="stat-card">
 
-        <!-- ================= HEADER ================= -->
+        <div class="stat-top">
 
-        <section class="page-header">
-            <h1>Admin Dashboard</h1>
-            <p>
-                Monitor passengers, bookings, revenue and safety activity
-                across the TransitConnect prototype.
-            </p>
-
-            <span class="admin-tag">
-                🔐 ADMINISTRATOR CONTROL PANEL
-            </span>
-        </section>
-
-
-        <!-- ================= STATISTICS ================= -->
-
-        <section class="stats-grid">
-
-            <div class="stat-card">
-                <div class="stat-top">
-                    <div>
-                        <h3 id="totalUsers">0</h3>
-                        <p>Total Users</p>
-                    </div>
-
-                    <div class="stat-icon">👥</div>
-                </div>
+            <div>
+                <h3 id="totalBookings">0</h3>
+                <p>Total Bookings</p>
             </div>
 
-
-            <div class="stat-card">
-                <div class="stat-top">
-                    <div>
-                        <h3 id="totalBookings">0</h3>
-                        <p>Total Bookings</p>
-                    </div>
-
-                    <div class="stat-icon">🎫</div>
-                </div>
+            <div class="stat-icon">
+                🎫
             </div>
 
+        </div>
 
-            <div class="stat-card">
-                <div class="stat-top">
-                    <div>
-                        <h3 id="totalRevenue">R0.00</h3>
-                        <p>Prototype Revenue</p>
-                    </div>
+    </div>
 
-                    <div class="stat-icon">💰</div>
-                </div>
+
+    <div class="stat-card">
+
+        <div class="stat-top">
+
+            <div>
+                <h3 id="totalRevenue">R0.00</h3>
+                <p>Prototype Revenue</p>
             </div>
 
-
-            <div class="stat-card">
-                <div class="stat-top">
-                    <div>
-                        <h3 id="totalReports">0</h3>
-                        <p>Safety Reports</p>
-                    </div>
-
-                    <div class="stat-icon">🛡️</div>
-                </div>
+            <div class="stat-icon">
+                💰
             </div>
 
-        </section>
+        </div>
+
+    </div>
 
 
-        <!-- ================= ACTION BAR ================= -->
+    <div class="stat-card">
 
-        <section class="action-bar">
+        <div class="stat-top">
+
+            <div>
+                <h3 id="totalReports">0</h3>
+                <p>Safety Reports</p>
+            </div>
+
+            <div class="stat-icon">
+                🛡️
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- JOURNEY MANAGEMENT -->
+
+<section class="section">
+
+    <div class="section-header">
+
+        <div>
+
+            <h2>
+                🚆 Journey Management
+            </h2>
 
             <p>
-                Data shown below is stored locally in the browser for this prototype.
+                Create and manage journeys available to passengers.
             </p>
 
-            <div class="action-buttons">
+        </div>
 
-                <button class="btn btn-primary" id="refreshBtn">
-                    🔄 Refresh Data
+        <span class="count-badge" id="routeCount">
+            0 journeys
+        </span>
+
+    </div>
+
+
+    <!-- JOURNEY FORM -->
+
+    <div class="form-container">
+
+        <form id="journeyForm">
+
+            <input
+                type="hidden"
+                id="editJourneyId"
+            >
+
+
+            <div class="form-grid">
+
+                <div class="form-group">
+
+                    <label for="journeyType">
+                        Transport Type
+                    </label>
+
+                    <select id="journeyType" required>
+
+                        <option value="">
+                            Select transport
+                        </option>
+
+                        <option value="Taxi">
+                            🚕 Taxi
+                        </option>
+
+                        <option value="Bus">
+                            🚌 Bus
+                        </option>
+
+                        <option value="Train">
+                            🚆 Train
+                        </option>
+
+                        <option value="Integrated">
+                            🔗 Integrated
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="operator">
+                        Operator
+                    </label>
+
+                    <input
+                        type="text"
+                        id="operator"
+                        placeholder="e.g. Gautrain"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="from">
+                        Origin
+                    </label>
+
+                    <input
+                        type="text"
+                        id="from"
+                        placeholder="e.g. Johannesburg Station"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="to">
+                        Destination
+                    </label>
+
+                    <input
+                        type="text"
+                        id="to"
+                        placeholder="e.g. Pretoria Station"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="departure">
+                        Departure Time
+                    </label>
+
+                    <input
+                        type="time"
+                        id="departure"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="arrival">
+                        Arrival Time
+                    </label>
+
+                    <input
+                        type="time"
+                        id="arrival"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="price">
+                        Fare (R)
+                    </label>
+
+                    <input
+                        type="number"
+                        id="price"
+                        min="0"
+                        step="0.01"
+                        placeholder="35.00"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="transfers">
+                        Number of Transfers
+                    </label>
+
+                    <input
+                        type="number"
+                        id="transfers"
+                        min="0"
+                        value="0"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="routeStatus">
+                        Status
+                    </label>
+
+                    <select id="routeStatus">
+
+                        <option value="On time">
+                            On time
+                        </option>
+
+                        <option value="Available">
+                            Available
+                        </option>
+
+                        <option value="Delayed">
+                            Delayed
+                        </option>
+
+                        <option value="Inactive">
+                            Inactive
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="legs">
+                        Journey Legs
+                    </label>
+
+                    <input
+                        type="text"
+                        id="legs"
+                        placeholder="e.g. Taxi, Train, Bus"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <div class="checkbox-group">
+
+                <input
+                    type="checkbox"
+                    id="recommended"
+                >
+
+                <label for="recommended">
+                    Mark this journey as recommended
+                </label>
+
+            </div>
+
+
+            <div class="form-actions">
+
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                    id="saveJourneyBtn"
+                >
+                    ➕ Create Journey
                 </button>
 
-                <button class="btn btn-danger" id="clearBtn">
-                    🗑️ Clear Demo Activity
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    id="cancelEditBtn"
+                    style="display:none;"
+                >
+                    Cancel Edit
                 </button>
 
             </div>
 
-        </section>
+        </form>
 
+    </div>
 
-        <!-- ================= USERS ================= -->
 
-        <section class="section">
+    <!-- JOURNEY TABLE -->
 
-            <div class="section-header">
+    <div class="table-wrapper">
 
-                <div>
-                    <h2>Registered Users</h2>
-                    <p>Passengers and administrators registered in the prototype.</p>
-                </div>
+        <table>
 
-                <span class="count-badge" id="usersCount">
-                    0 users
-                </span>
+            <thead>
 
-            </div>
+                <tr>
 
-            <div class="table-wrapper">
+                    <th>ID</th>
+                    <th>Transport</th>
+                    <th>Route</th>
+                    <th>Time</th>
+                    <th>Fare</th>
+                    <th>Transfers</th>
+                    <th>Status</th>
+                    <th>Recommended</th>
+                    <th>Actions</th>
 
-                <table>
+                </tr>
 
-                    <thead>
-                        <tr>
-                            <th>User ID</th>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Phone</th>
-                            <th>Role</th>
-<th>Action</th>
-                        </tr>
-                    </thead>
+            </thead>
 
-                    <tbody id="usersTable">
-                    </tbody>
+            <tbody id="routesTable">
+            </tbody>
 
-                </table>
+        </table>
 
-            </div>
+    </div>
 
-        </section>
+</section>
 
 
-        <!-- ================= BOOKINGS ================= -->
+<!-- ACTION BAR -->
 
-        <section class="section">
+<section class="section">
 
-            <div class="section-header">
+    <div class="section-header">
 
-                <div>
-                    <h2>Bookings & Revenue</h2>
-                    <p>All paid journey bookings recorded by the prototype.</p>
-                </div>
+        <div>
 
-                <span class="count-badge" id="bookingsCount">
-                    0 bookings
-                </span>
+            <h2>System Data</h2>
 
-            </div>
+            <p>
+                Refresh information or clear prototype activity.
+            </p>
 
-            <div class="table-wrapper">
+        </div>
 
-                <table>
+    </div>
 
-                    <thead>
-                        <tr>
-                            <th>Booking ID</th>
-                            <th>Ticket ID</th>
-                            <th>Passenger</th>
-                            <th>Route</th>
-                            <th>Date</th>
-                            <th>Fare</th>
-                            <th>Payment</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
+    <div style="padding:20px;display:flex;gap:10px;flex-wrap:wrap;">
 
-                    <tbody id="bookingsTable">
-                    </tbody>
+        <button
+            class="btn btn-primary"
+            id="refreshBtn"
+        >
+            🔄 Refresh Data
+        </button>
 
-                </table>
+        <button
+            class="btn btn-danger"
+            id="clearBtn"
+        >
+            🗑️ Clear Demo Activity
+        </button>
 
-            </div>
+    </div>
 
-        </section>
+</section>
 
 
-        <!-- ================= SAFETY REPORTS ================= -->
+<!-- USERS -->
 
-        <section class="section">
+<section class="section">
 
-            <div class="section-header">
+    <div class="section-header">
 
-                <div>
-                    <h2>Safety Reports</h2>
-                    <p>Incident reports submitted by passengers.</p>
-                </div>
+        <div>
 
-                <span class="count-badge" id="reportsCount">
-                    0 reports
-                </span>
+            <h2>Registered Users</h2>
 
-            </div>
+            <p>
+                Passengers and administrators.
+            </p>
 
-            <div class="table-wrapper">
+        </div>
 
-                <table>
+        <span
+            class="count-badge"
+            id="usersCount"
+        >
+            0 users
+        </span>
 
-                    <thead>
-                        <tr>
-                            <th>Report ID</th>
-                            <th>Passenger</th>
-                            <th>Incident Type</th>
-                            <th>Location</th>
-                            <th>Date / Time</th>
-                            <th>Description</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
+    </div>
 
-                    <tbody id="reportsTable">
-                    </tbody>
 
-                </table>
+    <div class="table-wrapper">
 
-            </div>
+        <table>
 
-        </section>
+            <thead>
 
+                <tr>
 
-        <!-- ================= SOS ALERTS ================= -->
+                    <th>User ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Role</th>
+                    <th>Action</th>
 
-        <section class="section">
+                </tr>
 
-            <div class="section-header">
+            </thead>
 
-                <div>
-                    <h2>Safety Alerts / SOS Events</h2>
-                    <p>
-                        Simulated SOS events generated from the Safety Centre.
-                    </p>
-                </div>
+            <tbody id="usersTable">
+            </tbody>
 
-                <span class="count-badge" id="sosCount">
-                    0 alerts
-                </span>
+        </table>
 
-            </div>
+    </div>
 
+</section>
 
-            <div class="table-wrapper">
 
-                <table>
+<!-- BOOKINGS -->
 
-                    <thead>
-                        <tr>
-                            <th>SOS ID</th>
-                            <th>Passenger</th>
-                            <th>Time</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
+<section class="section">
 
-                    <tbody id="sosTable">
-                    </tbody>
+    <div class="section-header">
 
-                </table>
+        <div>
 
-            </div>
+            <h2>Bookings & Revenue</h2>
 
-        </section>
+            <p>
+                All paid journey bookings.
+            </p>
 
+        </div>
 
-        <!-- ================= SYSTEM SUMMARY ================= -->
+        <span
+            class="count-badge"
+            id="bookingsCount"
+        >
+            0 bookings
+        </span>
 
-        <section class="section">
+    </div>
 
-            <div class="section-header">
 
-                <div>
-                    <h2>System Summary</h2>
-                    <p>Overview of the current prototype environment.</p>
-                </div>
+    <div class="table-wrapper">
 
-            </div>
+        <table>
 
-            <div class="safety-summary">
+            <thead>
 
-                <div class="safety-box">
-                    <h3>💾 Data Storage</h3>
-                    <p>
-                        TransitConnect currently uses browser LocalStorage
-                        as a temporary prototype database.
-                    </p>
-                </div>
+                <tr>
 
-                <div class="safety-box">
-                    <h3>💳 Payment Processing</h3>
-                    <p>
-                        Payments are simulated. No real financial transaction
-                        or payment gateway is connected.
-                    </p>
-                </div>
+                    <th>Booking ID</th>
+                    <th>Ticket ID</th>
+                    <th>Passenger</th>
+                    <th>Route</th>
+                    <th>Date</th>
+                    <th>Fare</th>
+                    <th>Payment</th>
+                    <th>Status</th>
 
-                <div class="safety-box">
-                    <h3>🎫 Ticketing</h3>
-                    <p>
-                        Tickets are generated locally after a successful
-                        simulated payment.
-                    </p>
-                </div>
+                </tr>
 
-                <div class="safety-box">
-                    <h3>🛡️ Safety</h3>
-                    <p>
-                        SOS and incident reporting are prototype features
-                        and do not contact emergency services.
-                    </p>
-                </div>
+            </thead>
 
-            </div>
+            <tbody id="bookingsTable">
+            </tbody>
 
-        </section>
+        </table>
 
-    </main>
+    </div>
 
+</section>
 
-    <!-- ================= FOOTER ================= -->
 
-    <footer>
-        <p>
-            © 2026 TransitConnect — Integrated Taxi, Bus & Train Journey Planning System
-        </p>
+<!-- SAFETY REPORTS -->
 
-        <p>
-            Frontend Prototype | HTML • CSS • JavaScript • LocalStorage
-        </p>
-    </footer>
+<section class="section">
 
+    <div class="section-header">
 
-    <!-- ================= JAVASCRIPT ================= -->
+        <div>
 
-    <script>
+            <h2>Safety Reports</h2>
 
-        /* =========================================================
-           ADMIN ACCESS CONTROL
-        ========================================================= */
+            <p>
+                Passenger incident reports.
+            </p>
 
-        const currentUser =
-            JSON.parse(localStorage.getItem("currentUser"));
+        </div>
 
-        if (!currentUser) {
+        <span
+            class="count-badge"
+            id="reportsCount"
+        >
+            0 reports
+        </span>
 
-            alert("Please log in as an administrator.");
+    </div>
 
-            window.location.href = "login.html";
 
-        } else if (currentUser.role !== "admin") {
+    <div class="table-wrapper">
 
-            alert("Access denied. Administrator privileges are required.");
+        <table>
 
-            window.location.href = "dashboard.html";
+            <thead>
 
+                <tr>
+
+                    <th>Report ID</th>
+                    <th>Passenger</th>
+                    <th>Incident</th>
+                    <th>Location</th>
+                    <th>Date/Time</th>
+                    <th>Description</th>
+                    <th>Status</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody id="reportsTable">
+            </tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+
+<!-- SOS -->
+
+<section class="section">
+
+    <div class="section-header">
+
+        <div>
+
+            <h2>🚨 SOS Events</h2>
+
+            <p>
+                Simulated emergency events generated by the prototype.
+            </p>
+
+        </div>
+
+        <span
+            class="count-badge"
+            id="sosCount"
+        >
+            0 alerts
+        </span>
+
+    </div>
+
+
+    <div class="table-wrapper">
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>SOS ID</th>
+                    <th>Passenger</th>
+                    <th>Time</th>
+                    <th>Status</th>
+                </tr>
+
+            </thead>
+
+            <tbody id="sosTable">
+            </tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+
+<!-- SYSTEM SUMMARY -->
+
+<section class="section">
+
+    <div class="section-header">
+
+        <div>
+
+            <h2>System Summary</h2>
+
+            <p>
+                Current prototype environment.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="summary-grid">
+
+        <div class="summary-box">
+
+            <h3>💾 Data Storage</h3>
+
+            <p>
+                The prototype currently uses LocalStorage
+                as a temporary browser database.
+            </p>
+
+        </div>
+
+
+        <div class="summary-box">
+
+            <h3>💳 Payment</h3>
+
+            <p>
+                Payments are simulated and no real money
+                is processed.
+            </p>
+
+        </div>
+
+
+        <div class="summary-box">
+
+            <h3>🚆 Journey Management</h3>
+
+            <p>
+                Administrators create available journeys.
+                Passengers search and book those journeys.
+            </p>
+
+        </div>
+
+
+        <div class="summary-box">
+
+            <h3>🛡️ Safety</h3>
+
+            <p>
+                Safety reporting and SOS features are
+                prototype-only functions.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+</main>
+
+
+<footer>
+
+    © 2026 TransitConnect
+
+    <br>
+
+    Integrated Taxi, Bus & Train Journey Planning System
+
+</footer>
+
+
+<script>
+
+/* =========================================================
+   ACCESS CONTROL
+========================================================= */
+
+const currentUser =
+    JSON.parse(localStorage.getItem("currentUser"));
+
+if(!currentUser){
+
+    alert("Please log in as an administrator.");
+
+    window.location.href="login.html";
+
+}
+
+else if(currentUser.role !== "admin"){
+
+    alert("Administrator access required.");
+
+    window.location.href="dashboard.html";
+
+}
+
+
+/* =========================================================
+   HELPERS
+========================================================= */
+
+function getData(key){
+
+    return JSON.parse(
+        localStorage.getItem(key) || "[]"
+    );
+
+}
+
+
+function saveData(key,data){
+
+    localStorage.setItem(
+        key,
+        JSON.stringify(data)
+    );
+
+}
+
+
+function escapeHTML(value){
+
+    if(value === null || value === undefined){
+        return "";
+    }
+
+    return String(value)
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+
+}
+
+
+function formatCurrency(amount){
+
+    return "R" +
+        (Number(amount) || 0).toFixed(2);
+
+}
+
+
+function formatDate(dateString){
+
+    if(!dateString){
+        return "—";
+    }
+
+    const date = new Date(dateString);
+
+    if(isNaN(date.getTime())){
+        return escapeHTML(dateString);
+    }
+
+    return date.toLocaleDateString("en-ZA",{
+        day:"2-digit",
+        month:"short",
+        year:"numeric"
+    });
+
+}
+
+
+function formatDateTime(dateString){
+
+    if(!dateString){
+        return "—";
+    }
+
+    const date = new Date(dateString);
+
+    if(isNaN(date.getTime())){
+        return escapeHTML(dateString);
+    }
+
+    return date.toLocaleString("en-ZA",{
+        day:"2-digit",
+        month:"short",
+        year:"numeric",
+        hour:"2-digit",
+        minute:"2-digit"
+    });
+
+}
+
+
+/* =========================================================
+   DEFAULT JOURNEYS
+========================================================= */
+
+function createDefaultRoutes(){
+
+    if(localStorage.getItem("transitconnect_routes")){
+        return;
+    }
+
+    const defaultRoutes = [
+
+        {
+            id:"R001",
+            type:"Train",
+            icon:"🚆",
+            operator:"Gautrain",
+            from:"Johannesburg Station",
+            to:"Pretoria Station",
+            departure:"07:30",
+            arrival:"08:25",
+            duration:55,
+            price:35,
+            transfers:0,
+            status:"On time",
+            recommended:true,
+            legs:["Train"]
+        },
+
+        {
+            id:"R002",
+            type:"Bus",
+            icon:"🚌",
+            operator:"TransitConnect Bus",
+            from:"Johannesburg CBD",
+            to:"Pretoria CBD",
+            departure:"07:15",
+            arrival:"09:00",
+            duration:105,
+            price:30,
+            transfers:0,
+            status:"On time",
+            recommended:false,
+            legs:["Bus"]
+        },
+
+        {
+            id:"R003",
+            type:"Taxi",
+            icon:"🚕",
+            operator:"City Taxi",
+            from:"Johannesburg",
+            to:"Pretoria CBD",
+            departure:"07:20",
+            arrival:"08:35",
+            duration:75,
+            price:80,
+            transfers:0,
+            status:"Available",
+            recommended:false,
+            legs:["Taxi"]
+        },
+
+        {
+            id:"R004",
+            type:"Integrated",
+            icon:"🔗",
+            operator:"TransitConnect Integrated",
+            from:"Johannesburg",
+            to:"Pretoria CBD",
+            departure:"07:00",
+            arrival:"08:50",
+            duration:110,
+            price:60,
+            transfers:2,
+            status:"On time",
+            recommended:true,
+            legs:["Taxi","Train","Bus"]
+        },
+
+        {
+            id:"R005",
+            type:"Integrated",
+            icon:"🔗",
+            operator:"TransitConnect Integrated",
+            from:"Soweto",
+            to:"Pretoria CBD",
+            departure:"06:50",
+            arrival:"08:45",
+            duration:115,
+            price:55,
+            transfers:2,
+            status:"Available",
+            recommended:false,
+            legs:["Bus","Train","Bus"]
         }
 
+    ];
 
-        /* =========================================================
-           HELPER FUNCTIONS
-        ========================================================= */
+    saveData(
+        "transitconnect_routes",
+        defaultRoutes
+    );
 
-        function getUsers() {
+}
 
-            return JSON.parse(
-                localStorage.getItem("users") || "[]"
+
+createDefaultRoutes();
+
+
+/* =========================================================
+   JOURNEY FORM
+========================================================= */
+
+const journeyForm =
+    document.getElementById("journeyForm");
+
+
+journeyForm.addEventListener(
+    "submit",
+    function(event){
+
+        event.preventDefault();
+
+        const routes =
+            getData("transitconnect_routes");
+
+        const editId =
+            document.getElementById("editJourneyId").value;
+
+        const type =
+            document.getElementById("journeyType").value;
+
+        const operator =
+            document.getElementById("operator").value.trim();
+
+        const from =
+            document.getElementById("from").value.trim();
+
+        const to =
+            document.getElementById("to").value.trim();
+
+        const departure =
+            document.getElementById("departure").value;
+
+        const arrival =
+            document.getElementById("arrival").value;
+
+        const price =
+            Number(document.getElementById("price").value);
+
+        const transfers =
+            Number(document.getElementById("transfers").value);
+
+        const status =
+            document.getElementById("routeStatus").value;
+
+        const legsText =
+            document.getElementById("legs").value.trim();
+
+        const recommended =
+            document.getElementById("recommended").checked;
+
+
+        if(price < 0 || transfers < 0){
+
+            alert(
+                "Fare and transfers cannot be negative."
             );
 
+            return;
+
         }
 
 
-        function getBookings() {
+        const legs =
+            legsText
+                ? legsText
+                    .split(",")
+                    .map(item => item.trim())
+                    .filter(Boolean)
+                : [type];
 
-            return JSON.parse(
-                localStorage.getItem("bookings") || "[]"
+
+        const duration =
+            calculateDuration(
+                departure,
+                arrival
             );
 
-        }
+
+        const icons = {
+            Taxi:"🚕",
+            Bus:"🚌",
+            Train:"🚆",
+            Integrated:"🔗"
+        };
 
 
-        function getSafetyReports() {
+        const routeData = {
 
-            return JSON.parse(
-                localStorage.getItem("safetyReports") || "[]"
-            );
+            id:
+                editId ||
+                "R" +
+                String(Date.now()).slice(-6),
 
-        }
+            type:type,
+
+            icon:
+                icons[type] || "🚆",
+
+            operator:operator,
+
+            from:from,
+
+            to:to,
+
+            departure:departure,
+
+            arrival:arrival,
+
+            duration:duration,
+
+            price:price,
+
+            transfers:transfers,
+
+            status:status,
+
+            recommended:recommended,
+
+            legs:legs
+
+        };
 
 
-        function getSosAlerts() {
+        if(editId){
 
-            return JSON.parse(
-                localStorage.getItem("sosAlerts") || "[]"
-            );
+            const index =
+                routes.findIndex(
+                    route => route.id === editId
+                );
 
-        }
+            if(index !== -1){
 
+                routes[index] = routeData;
 
-        function escapeHTML(value) {
-
-            if (value === null || value === undefined) {
-                return "";
             }
 
-            return String(value)
-                .replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/"/g, "&quot;")
-                .replace(/'/g, "&#039;");
-        }
-
-
-        function formatCurrency(amount) {
-
-            const number = Number(amount) || 0;
-
-            return "R" + number.toFixed(2);
+            alert(
+                "Journey updated successfully."
+            );
 
         }
 
+        else{
 
-        function formatDate(dateString) {
+            routes.push(routeData);
 
-            if (!dateString) {
-                return "—";
-            }
-
-            const date = new Date(dateString);
-
-            if (isNaN(date.getTime())) {
-                return escapeHTML(dateString);
-            }
-
-            return date.toLocaleDateString(
-                "en-ZA",
-                {
-                    day: "2-digit",
-                    month: "short",
-                    year: "numeric"
-                }
+            alert(
+                "Journey created successfully."
             );
 
         }
 
 
-        function formatDateTime(dateString) {
+        saveData(
+            "transitconnect_routes",
+            routes
+        );
 
-            if (!dateString) {
-                return "—";
+
+        resetJourneyForm();
+
+        renderRoutes();
+
+    }
+);
+
+
+/* =========================================================
+   CALCULATE DURATION
+========================================================= */
+
+function calculateDuration(start,end){
+
+    if(!start || !end){
+        return 0;
+    }
+
+    const startParts =
+        start.split(":").map(Number);
+
+    const endParts =
+        end.split(":").map(Number);
+
+    let startMinutes =
+        startParts[0] * 60 +
+        startParts[1];
+
+    let endMinutes =
+        endParts[0] * 60 +
+        endParts[1];
+
+
+    if(endMinutes < startMinutes){
+
+        endMinutes += 24 * 60;
+
+    }
+
+
+    return endMinutes - startMinutes;
+
+}
+
+
+/* =========================================================
+   RENDER JOURNEYS
+========================================================= */
+
+function renderRoutes(){
+
+    const routes =
+        getData("transitconnect_routes");
+
+    const table =
+        document.getElementById("routesTable");
+
+
+    document.getElementById("routeCount").textContent =
+        routes.length +
+        (routes.length === 1
+            ? " journey"
+            : " journeys");
+
+
+    if(routes.length === 0){
+
+        table.innerHTML = `
+
+            <tr>
+
+                <td colspan="9">
+
+                    <div class="empty">
+
+                        <div class="empty-icon">
+                            🚆
+                        </div>
+
+                        No journeys created yet.
+
+                    </div>
+
+                </td>
+
+            </tr>
+
+        `;
+
+        return;
+
+    }
+
+
+    table.innerHTML =
+        routes.map(function(route){
+
+            let statusClass =
+                "status-active";
+
+            if(route.status === "Delayed"){
+                statusClass = "status-delayed";
             }
 
-            const date = new Date(dateString);
-
-            if (isNaN(date.getTime())) {
-                return escapeHTML(dateString);
+            if(route.status === "Inactive"){
+                statusClass = "status-inactive";
             }
 
-            return date.toLocaleString(
-                "en-ZA",
-                {
-                    day: "2-digit",
-                    month: "short",
-                    year: "numeric",
-                    hour: "2-digit",
-                    minute: "2-digit"
-                }
-            );
+
+            return `
+
+                <tr>
+
+                    <td>
+                        ${escapeHTML(route.id)}
+                    </td>
+
+                    <td>
+
+                        ${route.icon || "🚆"}
+
+                        <strong>
+                            ${escapeHTML(route.type)}
+                        </strong>
+
+                        <br>
+
+                        <span class="muted">
+                            ${escapeHTML(route.operator)}
+                        </span>
+
+                    </td>
+
+                    <td class="route-cell">
+
+                        <strong>
+                            ${escapeHTML(route.from)}
+                        </strong>
+
+                        <span class="route-arrow">
+                            →
+                        </span>
+
+                        <strong>
+                            ${escapeHTML(route.to)}
+                        </strong>
+
+                    </td>
+
+                    <td>
+
+                        ${escapeHTML(route.departure)}
+
+                        →
+
+                        ${escapeHTML(route.arrival)}
+
+                    </td>
+
+                    <td class="fare">
+
+                        ${formatCurrency(route.price)}
+
+                    </td>
+
+                    <td>
+
+                        ${route.transfers}
+
+                    </td>
+
+                    <td>
+
+                        <span class="status ${statusClass}">
+
+                            ${escapeHTML(route.status)}
+
+                        </span>
+
+                    </td>
+
+                    <td>
+
+                        ${
+                            route.recommended
+                            ? "⭐ Yes"
+                            : "No"
+                        }
+
+                    </td>
+
+                    <td>
+
+                        <div class="action-buttons">
+
+                            <button
+                                class="btn btn-primary btn-small"
+                                onclick="editJourney('${route.id}')"
+                            >
+                                Edit
+                            </button>
+
+                            <button
+                                class="btn btn-danger btn-small"
+                                onclick="deleteJourney('${route.id}')"
+                            >
+                                Delete
+                            </button>
+
+                        </div>
+
+                    </td>
+
+                </tr>
+
+            `;
+
+        }).join("");
+
+}
+
+
+/* =========================================================
+   EDIT JOURNEY
+========================================================= */
+
+function editJourney(id){
+
+    const routes =
+        getData("transitconnect_routes");
+
+    const route =
+        routes.find(
+            item => item.id === id
+        );
+
+    if(!route){
+        return;
+    }
+
+
+    document.getElementById(
+        "editJourneyId"
+    ).value = route.id;
+
+
+    document.getElementById(
+        "journeyType"
+    ).value = route.type;
+
+
+    document.getElementById(
+        "operator"
+    ).value = route.operator;
+
+
+    document.getElementById(
+        "from"
+    ).value = route.from;
+
+
+    document.getElementById(
+        "to"
+    ).value = route.to;
+
+
+    document.getElementById(
+        "departure"
+    ).value = route.departure;
+
+
+    document.getElementById(
+        "arrival"
+    ).value = route.arrival;
+
+
+    document.getElementById(
+        "price"
+    ).value = route.price;
+
+
+    document.getElementById(
+        "transfers"
+    ).value = route.transfers;
+
+
+    document.getElementById(
+        "routeStatus"
+    ).value = route.status;
+
+
+    document.getElementById(
+        "legs"
+    ).value =
+        Array.isArray(route.legs)
+        ? route.legs.join(", ")
+        : "";
+
+
+    document.getElementById(
+        "recommended"
+    ).checked =
+        Boolean(route.recommended);
+
+
+    document.getElementById(
+        "saveJourneyBtn"
+    ).textContent =
+        "💾 Update Journey";
+
+
+    document.getElementById(
+        "cancelEditBtn"
+    ).style.display =
+        "inline-block";
+
+
+    document
+        .getElementById("journeyForm")
+        .scrollIntoView({
+            behavior:"smooth"
+        });
+
+}
+
+
+/* =========================================================
+   DELETE JOURNEY
+========================================================= */
+
+function deleteJourney(id){
+
+    const routes =
+        getData("transitconnect_routes");
+
+    const route =
+        routes.find(
+            item => item.id === id
+        );
+
+    if(!route){
+        return;
+    }
+
+
+    const confirmed =
+        confirm(
+            "Delete journey " +
+            route.from +
+            " → " +
+            route.to +
+            "?"
+        );
+
+
+    if(!confirmed){
+        return;
+    }
+
+
+    const updatedRoutes =
+        routes.filter(
+            item => item.id !== id
+        );
+
+
+    saveData(
+        "transitconnect_routes",
+        updatedRoutes
+    );
+
+
+    renderRoutes();
+
+    alert(
+        "Journey deleted successfully."
+    );
+
+}
+
+
+/* =========================================================
+   RESET FORM
+========================================================= */
+
+function resetJourneyForm(){
+
+    journeyForm.reset();
+
+    document.getElementById(
+        "editJourneyId"
+    ).value = "";
+
+    document.getElementById(
+        "transfers"
+    ).value = 0;
+
+    document.getElementById(
+        "saveJourneyBtn"
+    ).textContent =
+        "➕ Create Journey";
+
+    document.getElementById(
+        "cancelEditBtn"
+    ).style.display =
+        "none";
+
+}
+
+
+/* =========================================================
+   CANCEL EDIT
+========================================================= */
+
+document
+    .getElementById("cancelEditBtn")
+    .addEventListener(
+        "click",
+        resetJourneyForm
+    );
+
+
+/* =========================================================
+   USERS
+========================================================= */
+
+function renderUsers(){
+
+    const users =
+        getData("users");
+
+    const table =
+        document.getElementById("usersTable");
+
+
+    document.getElementById("usersCount").textContent =
+        users.length +
+        (users.length === 1
+            ? " user"
+            : " users");
+
+
+    if(users.length === 0){
+
+        table.innerHTML = `
+
+            <tr>
+
+                <td colspan="6">
+
+                    <div class="empty">
+
+                        <div class="empty-icon">
+                            👥
+                        </div>
+
+                        No users registered.
+
+                    </div>
+
+                </td>
+
+            </tr>
+
+        `;
+
+        return;
+
+    }
+
+
+    table.innerHTML =
+        users.map(function(user){
+
+            const role =
+                user.role || "passenger";
+
+
+            const roleClass =
+                role === "admin"
+                ? "status-admin"
+                : "status-passenger";
+
+
+            return `
+
+                <tr>
+
+                    <td>
+                        ${escapeHTML(user.id || "—")}
+                    </td>
+
+                    <td class="name-cell">
+                        ${escapeHTML(user.name || "—")}
+                    </td>
+
+                    <td>
+                        ${escapeHTML(user.email || "—")}
+                    </td>
+
+                    <td>
+                        ${escapeHTML(user.phone || "—")}
+                    </td>
+
+                    <td>
+
+                        <span class="status ${roleClass}">
+
+                            ${escapeHTML(role)}
+
+                        </span>
+
+                    </td>
+
+                    <td>
+
+                        ${
+                            role === "admin"
+
+                            ? `<span class="muted">
+                                Protected
+                              </span>`
+
+                            : `<button
+                                class="btn btn-danger btn-small"
+                                onclick="deleteUser('${user.id}')"
+                              >
+                                Delete
+                              </button>`
+                        }
+
+                    </td>
+
+                </tr>
+
+            `;
+
+        }).join("");
+
+}
+
+
+/* =========================================================
+   DELETE USER
+========================================================= */
+
+function deleteUser(id){
+
+    const users =
+        getData("users");
+
+    const user =
+        users.find(
+            item => item.id === id
+        );
+
+
+    if(!user){
+        return;
+    }
+
+
+    if(user.role === "admin"){
+
+        alert(
+            "The administrator account cannot be deleted."
+        );
+
+        return;
+
+    }
+
+
+    if(
+        !confirm(
+            "Delete user " +
+            user.name +
+            "?"
+        )
+    ){
+        return;
+    }
+
+
+    const updatedUsers =
+        users.filter(
+            item => item.id !== id
+        );
+
+
+    saveData(
+        "users",
+        updatedUsers
+    );
+
+
+    renderUsers();
+
+    alert(
+        "User deleted successfully."
+    );
+
+}
+
+
+/* =========================================================
+   BOOKINGS
+========================================================= */
+
+function renderBookings(){
+
+    const bookings =
+        getData("bookings");
+
+    const table =
+        document.getElementById("bookingsTable");
+
+
+    document.getElementById(
+        "bookingsCount"
+    ).textContent =
+        bookings.length +
+        (bookings.length === 1
+            ? " booking"
+            : " bookings");
+
+
+    let revenue = 0;
+
+
+    bookings.forEach(function(booking){
+
+        if(
+            booking.route &&
+            booking.route.price !== undefined
+        ){
+
+            revenue +=
+                Number(booking.route.price) || 0;
 
         }
 
-
-        /* =========================================================
-           LOAD DASHBOARD
-        ========================================================= */
-
-        function loadDashboard() {
-
-            const users = getUsers();
-            const bookings = getBookings();
-            const reports = getSafetyReports();
-            const sosAlerts = getSosAlerts();
+    });
 
 
-            /* ================= REVENUE ================= */
-
-            let totalRevenue = 0;
-
-            bookings.forEach(function (booking) {
-
-                if (
-                    booking.route &&
-                    booking.route.price !== undefined
-                ) {
-
-                    totalRevenue +=
-                        Number(booking.route.price) || 0;
-
-                }
-
-            });
+    document.getElementById(
+        "totalBookings"
+    ).textContent =
+        bookings.length;
 
 
-            /* ================= STATISTICS ================= */
-
-            document.getElementById("totalUsers").textContent =
-                users.length;
-
-            document.getElementById("totalBookings").textContent =
-                bookings.length;
-
-            document.getElementById("totalRevenue").textContent =
-                formatCurrency(totalRevenue);
-
-            document.getElementById("totalReports").textContent =
-                reports.length;
+    document.getElementById(
+        "totalRevenue"
+    ).textContent =
+        formatCurrency(revenue);
 
 
-            /* ================= COUNTS ================= */
+    if(bookings.length === 0){
 
-            document.getElementById("usersCount").textContent =
-                users.length + (users.length === 1 ? " user" : " users");
+        table.innerHTML = `
 
-            document.getElementById("bookingsCount").textContent =
-                bookings.length +
-                (bookings.length === 1 ? " booking" : " bookings");
+            <tr>
 
-            document.getElementById("reportsCount").textContent =
-                reports.length +
-                (reports.length === 1 ? " report" : " reports");
+                <td colspan="8">
 
-            document.getElementById("sosCount").textContent =
-                sosAlerts.length +
-                (sosAlerts.length === 1 ? " alert" : " alerts");
+                    <div class="empty">
+
+                        <div class="empty-icon">
+                            🎫
+                        </div>
+
+                        No bookings yet.
+
+                    </div>
+
+                </td>
+
+            </tr>
+
+        `;
+
+        return;
+
+    }
 
 
-            renderUsers(users);
-            renderBookings(bookings);
-            renderReports(reports);
-            renderSosAlerts(sosAlerts);
+    table.innerHTML =
+        bookings.map(function(booking){
 
-        }
+            const route =
+                booking.route || {};
 
 
-        /* =========================================================
-           USERS TABLE
-        ========================================================= */
+            return `
 
-        function renderUsers(users) {
+                <tr>
 
-            const table = document.getElementById("usersTable");
+                    <td>
+                        ${escapeHTML(booking.id || "—")}
+                    </td>
 
-            if (users.length === 0) {
-                table.innerHTML = `
-                    <tr>
-                        <td colspan="6">
-                            <div class="empty">
-                                <div class="empty-icon">👥</div>
-                                No users have been registered yet.
-                            </div>
-                        </td>
-                    </tr>
-                `;
+                    <td>
+                        ${escapeHTML(
+                            booking.ticketId || "—"
+                        )}
+                    </td>
+
+                    <td class="name-cell">
+                        ${escapeHTML(
+                            booking.userName || "—"
+                        )}
+                    </td>
+
+                    <td>
+
+                        ${escapeHTML(
+                            route.from || "—"
+                        )}
+
+                        →
+
+                        ${escapeHTML(
+                            route.to || "—"
+                        )}
+
+                    </td>
+
+                    <td>
+                        ${formatDate(
+                            booking.travelDate
+                        )}
+                    </td>
+
+                    <td class="fare">
+                        ${formatCurrency(
+                            route.price
+                        )}
+                    </td>
+
+                    <td>
+                        ${escapeHTML(
+                            booking.method || "—"
+                        )}
+                    </td>
+
+                    <td>
+
+                        <span class="status status-paid">
+                            ${escapeHTML(
+                                booking.status || "Paid"
+                            )}
+                        </span>
+
+                    </td>
+
+                </tr>
+
+            `;
+
+        }).join("");
+
+}
+
+
+/* =========================================================
+   SAFETY REPORTS
+========================================================= */
+
+function renderReports(){
+
+    const reports =
+        getData("safetyReports");
+
+    const table =
+        document.getElementById("reportsTable");
+
+
+    document.getElementById(
+        "totalReports"
+    ).textContent =
+        reports.length;
+
+
+    document.getElementById(
+        "reportsCount"
+    ).textContent =
+        reports.length +
+        (reports.length === 1
+            ? " report"
+            : " reports");
+
+
+    if(reports.length === 0){
+
+        table.innerHTML = `
+
+            <tr>
+
+                <td colspan="7">
+
+                    <div class="empty">
+
+                        <div class="empty-icon">
+                            🛡️
+                        </div>
+
+                        No safety reports.
+
+                    </div>
+
+                </td>
+
+            </tr>
+
+        `;
+
+        return;
+
+    }
+
+
+    table.innerHTML =
+        reports.map(function(report){
+
+            return `
+
+                <tr>
+
+                    <td>
+                        ${escapeHTML(
+                            report.id || "—"
+                        )}
+                    </td>
+
+                    <td class="name-cell">
+                        ${escapeHTML(
+                            report.userName || "—"
+                        )}
+                    </td>
+
+                    <td>
+                        ${escapeHTML(
+                            report.incidentType || "—"
+                        )}
+                    </td>
+
+                    <td>
+                        ${escapeHTML(
+                            report.location || "—"
+                        )}
+                    </td>
+
+                    <td>
+
+                        ${formatDate(report.date)}
+
+                        <br>
+
+                        <span class="muted">
+                            ${escapeHTML(
+                                report.time || "—"
+                            )}
+                        </span>
+
+                    </td>
+
+                    <td>
+                        ${escapeHTML(
+                            report.description || "—"
+                        )}
+                    </td>
+
+                    <td>
+
+                        <span class="status status-active">
+                            ${escapeHTML(
+                                report.status || "Submitted"
+                            )}
+                        </span>
+
+                    </td>
+
+                </tr>
+
+            `;
+
+        }).join("");
+
+}
+
+
+/* =========================================================
+   SOS
+========================================================= */
+
+function renderSOS(){
+
+    const alerts =
+        getData("sosAlerts");
+
+    const table =
+        document.getElementById("sosTable");
+
+
+    document.getElementById(
+        "sosCount"
+    ).textContent =
+        alerts.length +
+        (alerts.length === 1
+            ? " alert"
+            : " alerts");
+
+
+    if(alerts.length === 0){
+
+        table.innerHTML = `
+
+            <tr>
+
+                <td colspan="4">
+
+                    <div class="empty">
+
+                        <div class="empty-icon">
+                            🚨
+                        </div>
+
+                        No simulated SOS alerts.
+
+                    </div>
+
+                </td>
+
+            </tr>
+
+        `;
+
+        return;
+
+    }
+
+
+    table.innerHTML =
+        alerts.map(function(alert){
+
+            return `
+
+                <tr>
+
+                    <td>
+                        ${escapeHTML(
+                            alert.id ||
+                            alert.alertId ||
+                            "—"
+                        )}
+                    </td>
+
+                    <td class="name-cell">
+                        ${escapeHTML(
+                            alert.userName ||
+                            alert.name ||
+                            "Passenger"
+                        )}
+                    </td>
+
+                    <td>
+                        ${formatDateTime(
+                            alert.createdAt ||
+                            alert.timestamp
+                        )}
+                    </td>
+
+                    <td>
+
+                        <span class="status status-alert">
+                            ${escapeHTML(
+                                alert.status ||
+                                "Simulated"
+                            )}
+                        </span>
+
+                    </td>
+
+                </tr>
+
+            `;
+
+        }).join("");
+
+}
+
+
+/* =========================================================
+   DASHBOARD
+========================================================= */
+
+function loadDashboard(){
+
+    const users =
+        getData("users");
+
+
+    document.getElementById(
+        "totalUsers"
+    ).textContent =
+        users.length;
+
+
+    renderRoutes();
+
+    renderUsers();
+
+    renderBookings();
+
+    renderReports();
+
+    renderSOS();
+
+}
+
+
+/* =========================================================
+   REFRESH
+========================================================= */
+
+document
+    .getElementById("refreshBtn")
+    .addEventListener(
+        "click",
+        loadDashboard
+    );
+
+
+/* =========================================================
+   CLEAR DEMO ACTIVITY
+========================================================= */
+
+document
+    .getElementById("clearBtn")
+    .addEventListener(
+        "click",
+        function(){
+
+            const confirmed =
+                confirm(
+                    "Clear bookings, safety reports, SOS alerts and tickets?\n\nUsers and journeys will NOT be deleted."
+                );
+
+
+            if(!confirmed){
                 return;
             }
 
 
-            table.innerHTML = users.map(function(user) {
+            localStorage.removeItem("bookings");
+            localStorage.removeItem("safetyReports");
+            localStorage.removeItem("sosAlerts");
+            localStorage.removeItem("latestTicket");
+            localStorage.removeItem("paymentRoute");
 
-                const role = user.role || "passenger";
-
-                const roleClass =
-                    role === "admin"
-                        ? "status-admin"
-                        : "status-passenger";
-
-                return `
-                    <tr>
-
-                        <td>
-                            <span class="muted">
-                                ${escapeHTML(user.id || "—")}
-                            </span>
-                        </td>
-
-                        <td class="name-cell">
-                            ${escapeHTML(user.name || "—")}
-                        </td>
-
-                        <td>
-                            ${escapeHTML(user.email || "—")}
-                        </td>
-
-                        <td>
-                            ${escapeHTML(user.phone || "—")}
-                        </td>
-
-                        <td>
-                            <span class="status ${roleClass}">
-                                ${escapeHTML(role)}
-                            </span>
-                        </td>
-
-                        <td>
-                            ${
-                                role === "admin"
-                                ? `<span class="muted">Protected</span>`
-                                : `
-                                    <button
-                                        class="btn btn-danger"
-                                        onclick="deleteUser('${user.id}')">
-                                        Delete
-                                    </button>
-                                `
-                            }
-                        </td>
-
-                    </tr>
-                `;
-
-            }).join("");
-        }
-
-        function deleteUser(userId) {
-
-            const users = getUsers();
-
-            const user = users.find(function(user) {
-                return user.id === userId;
-            });
-
-            if (!user) {
-                alert("User not found.");
-                return;
-            }
-
-            // Prevent the administrator from being deleted
-            if (user.role === "admin") {
-                alert("The administrator account cannot be deleted.");
-                return;
-            }
-
-            const confirmed = confirm(
-                "Are you sure you want to delete " +
-                user.name +
-                "?"
-            );
-
-            if (!confirmed) {
-                return;
-            }
-
-            const updatedUsers = users.filter(function(user) {
-                return user.id !== userId;
-            });
-
-            localStorage.setItem(
-                "users",
-                JSON.stringify(updatedUsers)
-            );
-
-            // If the deleted user is currently logged in,
-            // log them out.
-            const loggedInUser =
-                JSON.parse(localStorage.getItem("currentUser"));
-
-            if (loggedInUser && loggedInUser.id === userId) {
-                localStorage.removeItem("currentUser");
-            }
 
             loadDashboard();
 
-            alert("User deleted successfully.");
-        }        
 
-        /* =========================================================
-           BOOKINGS TABLE
-        ========================================================= */
-
-        function renderBookings(bookings) {
-
-            const table =
-                document.getElementById("bookingsTable");
-
-
-            if (bookings.length === 0) {
-
-                table.innerHTML = `
-                    <tr>
-                        <td colspan="8">
-                            <div class="empty">
-                                <div class="empty-icon">🎫</div>
-                                No bookings have been made yet.
-                            </div>
-                        </td>
-                    </tr>
-                `;
-
-                return;
-
-            }
-
-
-            const sortedBookings =
-                [...bookings].sort(function (a, b) {
-
-                    return new Date(b.paidAt || 0)
-                        - new Date(a.paidAt || 0);
-
-                });
-
-
-            table.innerHTML =
-                sortedBookings.map(function (booking) {
-
-                    const route =
-                        booking.route || {};
-
-                    const from =
-                        route.from || "Unknown";
-
-                    const to =
-                        route.to || "Unknown";
-
-                    const fare =
-                        Number(route.price) || 0;
-
-                    const method =
-                        booking.method || "—";
-
-                    const status =
-                        booking.status || "Paid";
-
-                    return `
-                        <tr>
-
-                            <td>
-                                <span class="muted">
-                                    ${escapeHTML(booking.id || "—")}
-                                </span>
-                            </td>
-
-                            <td>
-                                ${escapeHTML(booking.ticketId || "—")}
-                            </td>
-
-                            <td class="name-cell">
-                                ${escapeHTML(
-                                    booking.userName || "—"
-                                )}
-                            </td>
-
-                            <td class="route-cell">
-
-                                <strong>
-                                    ${escapeHTML(from)}
-                                </strong>
-
-                                <span class="route-arrow">
-                                    →
-                                </span>
-
-                                <strong>
-                                    ${escapeHTML(to)}
-                                </strong>
-
-                                <br>
-
-                                <span class="muted">
-                                    ${escapeHTML(
-                                        route.type || "Transport"
-                                    )}
-                                    ${route.operator
-                                        ? " • " +
-                                          escapeHTML(route.operator)
-                                        : ""}
-                                </span>
-
-                            </td>
-
-                            <td>
-                                ${formatDate(booking.travelDate)}
-                            </td>
-
-                            <td class="fare">
-                                ${formatCurrency(fare)}
-                            </td>
-
-                            <td>
-                                ${escapeHTML(method)}
-                            </td>
-
-                            <td>
-                                <span class="status status-paid">
-                                    ${escapeHTML(status)}
-                                </span>
-                            </td>
-
-                        </tr>
-                    `;
-
-                }).join("");
+            alert(
+                "Demo activity cleared."
+            );
 
         }
+    );
 
 
-        /* =========================================================
-           SAFETY REPORTS TABLE
-        ========================================================= */
+/* =========================================================
+   LOGOUT
+========================================================= */
 
-        function renderReports(reports) {
+document
+    .getElementById("logoutBtn")
+    .addEventListener(
+        "click",
+        function(){
 
-            const table =
-                document.getElementById("reportsTable");
+            localStorage.removeItem(
+                "currentUser"
+            );
 
-
-            if (reports.length === 0) {
-
-                table.innerHTML = `
-                    <tr>
-                        <td colspan="7">
-                            <div class="empty">
-                                <div class="empty-icon">🛡️</div>
-                                No safety reports have been submitted.
-                            </div>
-                        </td>
-                    </tr>
-                `;
-
-                return;
-
-            }
-
-
-            const sortedReports =
-                [...reports].sort(function (a, b) {
-
-                    return new Date(b.createdAt || 0)
-                        - new Date(a.createdAt || 0);
-
-                });
-
-
-            table.innerHTML =
-                sortedReports.map(function (report) {
-
-                    const status =
-                        report.status || "Submitted";
-
-                    return `
-                        <tr>
-
-                            <td>
-                                <span class="muted">
-                                    ${escapeHTML(
-                                        report.id || "—"
-                                    )}
-                                </span>
-                            </td>
-
-                            <td class="name-cell">
-                                ${escapeHTML(
-                                    report.userName || "—"
-                                )}
-                            </td>
-
-                            <td>
-                                ${escapeHTML(
-                                    report.incidentType || "—"
-                                )}
-                            </td>
-
-                            <td>
-                                ${escapeHTML(
-                                    report.location || "—"
-                                )}
-                            </td>
-
-                            <td>
-                                ${formatDate(report.date)}
-                                <br>
-                                <span class="muted">
-                                    ${escapeHTML(
-                                        report.time || "—"
-                                    )}
-                                </span>
-                            </td>
-
-                            <td>
-                                ${escapeHTML(
-                                    report.description || "—"
-                                )}
-                            </td>
-
-                            <td>
-                                <span class="status status-submitted">
-                                    ${escapeHTML(status)}
-                                </span>
-                            </td>
-
-                        </tr>
-                    `;
-
-                }).join("");
+            window.location.href =
+                "login.html";
 
         }
+    );
 
 
-        /* =========================================================
-           SOS TABLE
-        ========================================================= */
+/* =========================================================
+   START
+========================================================= */
 
-        function renderSosAlerts(alerts) {
+loadDashboard();
 
-            const table =
-                document.getElementById("sosTable");
-
-
-            if (alerts.length === 0) {
-
-                table.innerHTML = `
-                    <tr>
-                        <td colspan="4">
-                            <div class="empty">
-                                <div class="empty-icon">🚨</div>
-                                No simulated SOS alerts have been recorded.
-                            </div>
-                        </td>
-                    </tr>
-                `;
-
-                return;
-
-            }
-
-
-            const sortedAlerts =
-                [...alerts].sort(function (a, b) {
-
-                    return new Date(b.createdAt || b.timestamp || 0)
-                        - new Date(a.createdAt || a.timestamp || 0);
-
-                });
-
-
-            table.innerHTML =
-                sortedAlerts.map(function (alert) {
-
-                    const alertTime =
-                        alert.createdAt ||
-                        alert.timestamp ||
-                        "";
-
-                    const status =
-                        alert.status || "Simulated";
-
-
-                    return `
-                        <tr>
-
-                            <td>
-                                <span class="muted">
-                                    ${escapeHTML(
-                                        alert.id ||
-                                        alert.alertId ||
-                                        "—"
-                                    )}
-                                </span>
-                            </td>
-
-                            <td class="name-cell">
-                                ${escapeHTML(
-                                    alert.userName ||
-                                    alert.name ||
-                                    "Passenger"
-                                )}
-                            </td>
-
-                            <td>
-                                ${formatDateTime(alertTime)}
-                            </td>
-
-                            <td>
-                                <span class="status status-alert">
-                                    ${escapeHTML(status)}
-                                </span>
-                            </td>
-
-                        </tr>
-                    `;
-
-                }).join("");
-
-        }
-
-
-        /* =========================================================
-           REFRESH BUTTON
-        ========================================================= */
-
-        document
-            .getElementById("refreshBtn")
-            .addEventListener("click", function () {
-
-                loadDashboard();
-
-            });
-
-
-        /* =========================================================
-           CLEAR DEMO ACTIVITY
-        ========================================================= */
-
-        document
-            .getElementById("clearBtn")
-            .addEventListener("click", function () {
-
-                const confirmed =
-                    confirm(
-                        "Are you sure you want to clear all demo bookings, safety reports and SOS alerts?\n\nUsers and the administrator account will NOT be deleted."
-                    );
-
-
-                if (!confirmed) {
-                    return;
-                }
-
-
-                localStorage.removeItem("bookings");
-                localStorage.removeItem("safetyReports");
-                localStorage.removeItem("sosAlerts");
-                localStorage.removeItem("latestTicket");
-                localStorage.removeItem("paymentRoute");
-
-
-                loadDashboard();
-
-
-                alert(
-                    "Demo activity has been cleared successfully."
-                );
-
-            });
-
-
-        /* =========================================================
-           LOGOUT
-        ========================================================= */
-
-        document
-            .getElementById("logoutBtn")
-            .addEventListener("click", function () {
-
-                localStorage.removeItem("currentUser");
-
-                window.location.href = "login.html";
-
-            });
-
-
-        /* =========================================================
-           INITIAL LOAD
-        ========================================================= */
-
-        loadDashboard();
-
-    </script>
+</script>
 
 </body>
 </html>
