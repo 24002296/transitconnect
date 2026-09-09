@@ -1,1751 +1,1254 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 
-    <meta charset="UTF-8">
-
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
-    <title>TransitConnect - Journey Planner</title>
-
-
-    <style>
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, Helvetica, sans-serif;
-        }
-
-
-        body {
-            background: #f5f7fb;
-            color: #172033;
-        }
-
-
-        /* =========================
-           NAVIGATION
-        ========================= */
-
-        .navbar {
-            height: 72px;
-            background: white;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 6%;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-
-        .logo {
-            font-size: 24px;
-            font-weight: bold;
-            color: #1769e0;
-        }
-
-
-        .logo span {
-            color: #172033;
-        }
-
-
-        .nav-links {
-            display: flex;
-            align-items: center;
-            gap: 22px;
-        }
-
-
-        .nav-links a {
-            text-decoration: none;
-            color: #4b5563;
-            font-size: 14px;
-        }
-
-
-        .nav-links a:hover {
-            color: #1769e0;
-        }
-
-
-        .logout {
-            border: none;
-            background: #fff0f0;
-            color: #c62828;
-            padding: 9px 16px;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-
-
-        /* =========================
-           MAIN CONTAINER
-        ========================= */
-
-        .container {
-            width: 90%;
-            max-width: 1200px;
-            margin: 35px auto 60px;
-        }
-
-
-        .page-header {
-            margin-bottom: 25px;
-        }
-
-
-        .page-header h1 {
-            font-size: 32px;
-            margin-bottom: 8px;
-        }
-
-
-        .page-header p {
-            color: #667085;
-        }
-
-
-        /* =========================
-           SEARCH PANEL
-        ========================= */
-
-        .search-panel {
-            background: white;
-            padding: 25px;
-            border-radius: 18px;
-            box-shadow: 0 10px 30px rgba(20,32,55,0.07);
-            margin-bottom: 30px;
-        }
-
-
-        .search-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr 180px 150px;
-            gap: 15px;
-            align-items: end;
-        }
-
-
-        .input-group label {
-            display: block;
-            font-size: 13px;
-            font-weight: bold;
-            margin-bottom: 7px;
-        }
-
-
-        .input-group input {
-            width: 100%;
-            padding: 13px;
-            border: 1px solid #dfe3eb;
-            border-radius: 9px;
-            outline: none;
-            font-size: 14px;
-        }
-
-
-        .input-group input:focus {
-            border-color: #1769e0;
-            box-shadow: 0 0 0 3px rgba(23,105,224,0.08);
-        }
-
-
-        .search-button {
-            border: none;
-            background: #1769e0;
-            color: white;
-            padding: 13px;
-            border-radius: 9px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-
-        .search-button:hover {
-            background: #0d4fac;
-        }
-
-
-        /* =========================
-           RESULTS HEADER
-        ========================= */
-
-        .results-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 20px;
-            gap: 15px;
-        }
-
-
-        .results-header h2 {
-            font-size: 22px;
-        }
-
-
-        .sort-select {
-            padding: 10px 13px;
-            border: 1px solid #dfe3eb;
-            border-radius: 8px;
-            background: white;
-            outline: none;
-        }
-
-
-        /* =========================
-           FILTERS
-        ========================= */
-
-        .filters {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 22px;
-            flex-wrap: wrap;
-        }
-
-
-        .filter-btn {
-            border: 1px solid #dfe3eb;
-            background: white;
-            padding: 9px 18px;
-            border-radius: 20px;
-            cursor: pointer;
-            color: #4b5563;
-            font-weight: 500;
-        }
-
-
-        .filter-btn:hover {
-            border-color: #1769e0;
-            color: #1769e0;
-        }
-
-
-        .filter-btn.active {
-            background: #1769e0;
-            border-color: #1769e0;
-            color: white;
-        }
-
-
-        /* =========================
-           ROUTE CARD
-        ========================= */
-
-        .route-card {
-            background: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 18px;
-            padding: 25px;
-            margin-bottom: 18px;
-            transition: 0.2s;
-        }
-
-
-        .route-card:hover {
-            box-shadow: 0 12px 30px rgba(20,32,55,0.08);
-            transform: translateY(-2px);
-        }
-
-
-        .route-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 20px;
-        }
-
-
-        .transport {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-
-        .transport-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
-            background: #eef5ff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-        }
-
-
-        .transport-name {
-            font-size: 18px;
-            font-weight: bold;
-        }
-
-
-        .operator {
-            color: #667085;
-            font-size: 13px;
-            margin-top: 4px;
-        }
-
-
-        .price {
-            font-size: 24px;
-            font-weight: bold;
-            color: #1769e0;
-            white-space: nowrap;
-        }
-
-
-        .route-line {
-            margin: 22px 0;
-            display: grid;
-            grid-template-columns: 100px 1fr 100px;
-            align-items: center;
-            gap: 20px;
-        }
-
-
-        .time {
-            font-size: 20px;
-            font-weight: bold;
-        }
-
-
-        .location {
-            color: #667085;
-            font-size: 13px;
-            margin-top: 4px;
-        }
-
-
-        .timeline {
-            position: relative;
-            height: 4px;
-            background: #dfe7f5;
-            border-radius: 10px;
-        }
-
-
-        .timeline::before,
-        .timeline::after {
-            content: "";
-            width: 12px;
-            height: 12px;
-            background: #1769e0;
-            border-radius: 50%;
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-        }
-
-
-        .timeline::before {
-            left: 0;
-        }
-
-
-        .timeline::after {
-            right: 0;
-        }
-
-
-        .duration {
-            text-align: center;
-            color: #667085;
-            font-size: 12px;
-            margin-top: 10px;
-        }
-
-
-        .route-bottom {
-            border-top: 1px solid #edf0f4;
-            padding-top: 18px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 20px;
-        }
-
-
-        .route-info {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-
-
-        .info-item {
-            color: #667085;
-            font-size: 13px;
-        }
-
-
-        .info-item strong {
-            color: #172033;
-        }
-
-
-        .select-btn {
-            background: #1769e0;
-            color: white;
-            border: none;
-            padding: 11px 22px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-
-        .select-btn:hover {
-            background: #0d4fac;
-        }
-
-
-        /* =========================
-           INTEGRATED JOURNEY
-        ========================= */
-
-        .integrated-legs {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin-top: 12px;
-        }
-
-
-        .leg {
-            padding: 6px 10px;
-            background: #f1f5f9;
-            border-radius: 7px;
-            font-size: 12px;
-            font-weight: bold;
-        }
-
-
-        .arrow {
-            color: #98a2b3;
-        }
-
-
-        .recommended {
-            display: inline-block;
-            background: #ecfdf3;
-            color: #15803d;
-            padding: 5px 9px;
-            border-radius: 6px;
-            font-size: 11px;
-            font-weight: bold;
-            margin-left: 8px;
-        }
-
-
-        /* =========================
-           EMPTY STATE
-        ========================= */
-
-        .empty {
-            background: white;
-            padding: 60px 20px;
-            text-align: center;
-            border-radius: 18px;
-            border: 1px solid #e5e7eb;
-        }
-
-
-        .empty-icon {
-            font-size: 45px;
-            margin-bottom: 15px;
-        }
-
-
-        .empty h3 {
-            margin-bottom: 8px;
-        }
-
-
-        .empty p {
-            color: #667085;
-        }
-
-
-        /* =========================
-           MOBILE
-        ========================= */
-
-        @media (max-width: 950px) {
-
-            .search-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-
-            .route-line {
-                grid-template-columns: 80px 1fr 80px;
-            }
-
-        }
-
-
-        @media (max-width: 650px) {
-
-            .navbar {
-                padding: 0 5%;
-            }
-
-
-            .nav-links a:not(.logout) {
-                display: none;
-            }
-
-
-            .container {
-                width: 92%;
-            }
-
-
-            .page-header h1 {
-                font-size: 27px;
-            }
-
-
-            .search-grid {
-                grid-template-columns: 1fr;
-            }
-
-
-            .results-header {
-                align-items: flex-start;
-                flex-direction: column;
-            }
-
-
-            .route-top {
-                flex-direction: column;
-            }
-
-
-            .route-line {
-                grid-template-columns: 65px 1fr 65px;
-                gap: 10px;
-            }
-
-
-            .time {
-                font-size: 17px;
-            }
-
-
-            .route-bottom {
-                align-items: flex-start;
-                flex-direction: column;
-            }
-
-
-            .select-btn {
-                width: 100%;
-            }
-
-        }
-
-    </style>
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>Journey Planner | TransitConnect</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    background:#f4f7fb;
+    color:#172033;
+}
+
+.navbar{
+    background:#fff;
+    border-bottom:1px solid #e5e9f2;
+    padding:16px 5%;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.logo{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-size:22px;
+    font-weight:800;
+}
+
+.logo-icon{
+    width:42px;
+    height:42px;
+    background:#2563eb;
+    color:#fff;
+    border-radius:12px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.back-link{
+    color:#2563eb;
+    font-weight:700;
+}
+
+.container{
+    width:90%;
+    max-width:1200px;
+    margin:auto;
+}
+
+.header{
+    padding:35px 0 25px;
+}
+
+.header h1{
+    font-size:32px;
+    margin-bottom:6px;
+}
+
+.header p{
+    color:#697386;
+}
+
+/* SEARCH */
+
+.search-box{
+    background:#fff;
+    border:1px solid #e5e9f2;
+    border-radius:16px;
+    padding:22px;
+    margin-bottom:25px;
+    box-shadow:0 4px 15px rgba(15,23,42,.04);
+}
+
+.search-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr 180px auto;
+    gap:12px;
+}
+
+.field{
+    display:flex;
+    flex-direction:column;
+}
+
+.field label{
+    font-size:12px;
+    font-weight:700;
+    margin-bottom:5px;
+}
+
+.field input{
+    padding:12px;
+    border:1px solid #dce2eb;
+    border-radius:9px;
+    outline:none;
+}
+
+.field input:focus{
+    border-color:#2563eb;
+}
+
+.search-btn{
+    align-self:end;
+    border:none;
+    background:#2563eb;
+    color:white;
+    padding:12px 20px;
+    border-radius:9px;
+    font-weight:700;
+    cursor:pointer;
+}
+
+.search-btn:hover{
+    background:#1d4ed8;
+}
+
+/* FILTERS */
+
+.controls{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:15px;
+    margin-bottom:20px;
+}
+
+.filters{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+}
+
+.filter{
+    border:1px solid #dce2eb;
+    background:#fff;
+    padding:8px 14px;
+    border-radius:20px;
+    cursor:pointer;
+    font-weight:700;
+    font-size:13px;
+}
+
+.filter.active{
+    background:#2563eb;
+    color:white;
+    border-color:#2563eb;
+}
+
+.sort{
+    padding:9px 12px;
+    border:1px solid #dce2eb;
+    border-radius:8px;
+    background:#fff;
+}
+
+/* ROUTES */
+
+.results-info{
+    margin-bottom:15px;
+    color:#697386;
+    font-size:14px;
+}
+
+.route-card{
+    background:#fff;
+    border:1px solid #e5e9f2;
+    border-radius:16px;
+    padding:20px;
+    margin-bottom:15px;
+    box-shadow:0 4px 15px rgba(15,23,42,.04);
+}
+
+.route-top{
+    display:flex;
+    justify-content:space-between;
+    gap:15px;
+    align-items:flex-start;
+}
+
+.transport{
+    display:flex;
+    gap:12px;
+    align-items:center;
+}
+
+.transport-icon{
+    width:48px;
+    height:48px;
+    background:#eef4ff;
+    border-radius:12px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:23px;
+}
+
+.operator{
+    font-weight:800;
+}
+
+.type{
+    color:#7a8495;
+    font-size:13px;
+}
+
+.badge{
+    background:#dcfce7;
+    color:#15803d;
+    padding:5px 9px;
+    border-radius:20px;
+    font-size:11px;
+    font-weight:700;
+}
+
+.route-main{
+    display:grid;
+    grid-template-columns:1fr 130px 1fr;
+    align-items:center;
+    gap:15px;
+    margin:20px 0;
+}
+
+.location strong{
+    display:block;
+    font-size:17px;
+}
+
+.location span{
+    color:#697386;
+    font-size:13px;
+}
+
+.time{
+    text-align:center;
+}
+
+.time strong{
+    font-size:19px;
+}
+
+.duration{
+    color:#7a8495;
+    font-size:12px;
+}
+
+.line{
+    height:2px;
+    background:#dbe3ef;
+    position:relative;
+    margin-top:5px;
+}
+
+.line:after{
+    content:"";
+    position:absolute;
+    width:8px;
+    height:8px;
+    border-radius:50%;
+    background:#2563eb;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+}
+
+.route-bottom{
+    border-top:1px solid #edf0f5;
+    padding-top:15px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:15px;
+}
+
+.details{
+    display:flex;
+    gap:18px;
+    flex-wrap:wrap;
+    color:#697386;
+    font-size:13px;
+}
+
+.price{
+    font-size:22px;
+    font-weight:800;
+    color:#15803d;
+}
+
+.select-btn{
+    border:none;
+    background:#2563eb;
+    color:white;
+    padding:10px 18px;
+    border-radius:9px;
+    font-weight:700;
+    cursor:pointer;
+}
+
+.select-btn:hover{
+    background:#1d4ed8;
+}
+
+.legs{
+    margin-top:12px;
+    display:flex;
+    gap:7px;
+    flex-wrap:wrap;
+}
+
+.leg{
+    background:#f1f5f9;
+    padding:5px 9px;
+    border-radius:7px;
+    font-size:12px;
+    font-weight:700;
+}
+
+.empty{
+    background:#fff;
+    border:1px solid #e5e9f2;
+    border-radius:16px;
+    padding:45px 20px;
+    text-align:center;
+    color:#697386;
+}
+
+.empty-icon{
+    font-size:40px;
+    margin-bottom:10px;
+}
+
+.notice{
+    background:#eff6ff;
+    border:1px solid #bfdbfe;
+    color:#1e40af;
+    padding:14px 16px;
+    border-radius:10px;
+    margin-bottom:20px;
+    font-size:13px;
+}
+
+footer{
+    text-align:center;
+    padding:35px 20px;
+    color:#7a8495;
+    font-size:13px;
+}
+
+@media(max-width:900px){
+
+    .search-grid{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .route-main{
+        grid-template-columns:1fr;
+        text-align:left;
+    }
+
+    .time{
+        text-align:left;
+    }
+
+    .line{
+        display:none;
+    }
+
+}
+
+@media(max-width:600px){
+
+    .search-grid{
+        grid-template-columns:1fr;
+    }
+
+    .controls{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .route-top{
+        flex-direction:column;
+    }
+
+    .route-bottom{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+}
+
+</style>
 
 </head>
-
 
 <body>
 
 
-    <!-- =========================
-         NAVIGATION
-    ========================= -->
+<!-- NAVBAR -->
 
-    <nav class="navbar">
+<nav class="navbar">
 
-        <div class="logo">
-            Transit<span>Connect</span>
+    <a href="dashboard.html" class="logo">
+
+        <span class="logo-icon">
+            🚆
+        </span>
+
+        <span>
+            TransitConnect
+        </span>
+
+    </a>
+
+    <a
+        href="dashboard.html"
+        class="back-link"
+    >
+        ← Dashboard
+    </a>
+
+</nav>
+
+
+<main class="container">
+
+
+<section class="header">
+
+    <h1>
+        Plan Your Journey
+    </h1>
+
+    <p>
+        Compare available taxi, bus, train and integrated journeys.
+    </p>
+
+</section>
+
+
+<div class="notice">
+
+    💡 Journeys displayed here are created and managed
+    by the TransitConnect administrator.
+
+</div>
+
+
+<!-- SEARCH -->
+
+<section class="search-box">
+
+    <div class="search-grid">
+
+        <div class="field">
+
+            <label>
+                From
+            </label>
+
+            <input
+                type="text"
+                id="fromInput"
+                placeholder="e.g. Johannesburg"
+            >
+
         </div>
 
 
-        <div class="nav-links">
+        <div class="field">
 
-            <a href="dashboard.html">
-                Dashboard
-            </a>
+            <label>
+                To
+            </label>
 
-            <a href="journey-planner.html">
-                Plan Journey
-            </a>
-
-            <a href="my-trips.html">
-                My Trips
-            </a>
-
-            <a href="safety.html">
-                Safety
-            </a>
-
-            <button
-                class="logout"
-                id="logoutBtn">
-
-                Logout
-
-            </button>
-
-        </div>
-
-    </nav>
-
-
-    <!-- =========================
-         MAIN
-    ========================= -->
-
-    <main class="container">
-
-
-        <div class="page-header">
-
-            <h1>
-                Journey Planner
-            </h1>
-
-            <p>
-                Compare taxi, bus, train and integrated journey options.
-            </p>
+            <input
+                type="text"
+                id="toInput"
+                placeholder="e.g. Pretoria"
+            >
 
         </div>
 
 
-        <!-- SEARCH -->
+        <div class="field">
 
-        <section class="search-panel">
+            <label>
+                Travel Date
+            </label>
 
-            <form id="searchForm">
+            <input
+                type="date"
+                id="dateInput"
+            >
 
-                <div class="search-grid">
-
-
-                    <div class="input-group">
-
-                        <label for="from">
-                            From
-                        </label>
-
-                        <input
-                            type="text"
-                            id="from"
-                            placeholder="e.g. Johannesburg"
-                            required
-                        >
-
-                    </div>
+        </div>
 
 
-                    <div class="input-group">
+        <button
+            class="search-btn"
+            id="searchBtn"
+        >
+            🔎 Search
+        </button>
 
-                        <label for="to">
-                            To
-                        </label>
+    </div>
 
-                        <input
-                            type="text"
-                            id="to"
-                            placeholder="e.g. Pretoria"
-                            required
-                        >
-
-                    </div>
+</section>
 
 
-                    <div class="input-group">
+<!-- CONTROLS -->
 
-                        <label for="date">
-                            Travel Date
-                        </label>
+<section class="controls">
 
-                        <input
-                            type="date"
-                            id="date"
-                            required
-                        >
+    <div class="filters">
 
-                    </div>
+        <button
+            class="filter active"
+            data-type="All"
+        >
+            All
+        </button>
+
+        <button
+            class="filter"
+            data-type="Taxi"
+        >
+            🚕 Taxi
+        </button>
+
+        <button
+            class="filter"
+            data-type="Bus"
+        >
+            🚌 Bus
+        </button>
+
+        <button
+            class="filter"
+            data-type="Train"
+        >
+            🚆 Train
+        </button>
+
+        <button
+            class="filter"
+            data-type="Integrated"
+        >
+            🔗 Integrated
+        </button>
+
+    </div>
 
 
-                    <button
-                        type="submit"
-                        class="search-button">
+    <select
+        class="sort"
+        id="sortSelect"
+    >
 
-                        🔍 Search
+        <option value="recommended">
+            Recommended
+        </option>
 
-                    </button>
+        <option value="price">
+            Lowest Price
+        </option>
 
+        <option value="duration">
+            Shortest Time
+        </option>
+
+    </select>
+
+</section>
+
+
+<div
+    class="results-info"
+    id="resultsInfo"
+>
+    Showing available journeys
+</div>
+
+
+<!-- RESULTS -->
+
+<section id="results">
+
+</section>
+
+
+</main>
+
+
+<footer>
+
+    © 2026 TransitConnect
+
+    <br>
+
+    Integrated Taxi, Bus & Train Journey Planning System
+
+</footer>
+
+
+<script>
+
+/* =========================================================
+   LOGIN
+========================================================= */
+
+const currentUser =
+    JSON.parse(
+        localStorage.getItem("currentUser")
+    );
+
+
+if(!currentUser){
+
+    alert(
+        "Please log in first."
+    );
+
+    window.location.href =
+        "login.html";
+
+}
+
+
+/* =========================================================
+   ELEMENTS
+========================================================= */
+
+const fromInput =
+    document.getElementById("fromInput");
+
+const toInput =
+    document.getElementById("toInput");
+
+const dateInput =
+    document.getElementById("dateInput");
+
+const searchBtn =
+    document.getElementById("searchBtn");
+
+const results =
+    document.getElementById("results");
+
+const resultsInfo =
+    document.getElementById("resultsInfo");
+
+const sortSelect =
+    document.getElementById("sortSelect");
+
+
+let activeType = "All";
+
+
+/* =========================================================
+   DATE
+========================================================= */
+
+const today =
+    new Date().toISOString().split("T")[0];
+
+dateInput.min = today;
+
+
+/* =========================================================
+   LOAD PREVIOUS SEARCH
+========================================================= */
+
+const previousSearch =
+    JSON.parse(
+        localStorage.getItem(
+            "journeySearch"
+        ) || "null"
+    );
+
+
+if(previousSearch){
+
+    fromInput.value =
+        previousSearch.from || "";
+
+    toInput.value =
+        previousSearch.to || "";
+
+    dateInput.value =
+        previousSearch.date || "";
+
+}
+
+
+/* =========================================================
+   GET ROUTES
+========================================================= */
+
+function getRoutes(){
+
+    return JSON.parse(
+        localStorage.getItem(
+            "transitconnect_routes"
+        ) || "[]"
+    );
+
+}
+
+
+/* =========================================================
+   NORMALIZE
+========================================================= */
+
+function normalize(value){
+
+    return String(value || "")
+        .toLowerCase()
+        .replace(/station/g,"")
+        .replace(/cbd/g,"")
+        .trim();
+
+}
+
+
+/* =========================================================
+   SEARCH
+========================================================= */
+
+function searchRoutes(){
+
+    const from =
+        normalize(fromInput.value);
+
+    const to =
+        normalize(toInput.value);
+
+
+    localStorage.setItem(
+        "journeySearch",
+        JSON.stringify({
+
+            from:
+                fromInput.value.trim(),
+
+            to:
+                toInput.value.trim(),
+
+            date:
+                dateInput.value
+
+        })
+    );
+
+
+    let routes =
+        getRoutes();
+
+
+    /* MATCH ORIGIN */
+
+    if(from){
+
+        routes =
+            routes.filter(
+                route =>
+                    normalize(route.from)
+                        .includes(from) ||
+                    from.includes(
+                        normalize(route.from)
+                    )
+            );
+
+    }
+
+
+    /* MATCH DESTINATION */
+
+    if(to){
+
+        routes =
+            routes.filter(
+                route =>
+                    normalize(route.to)
+                        .includes(to) ||
+                    to.includes(
+                        normalize(route.to)
+                    )
+            );
+
+    }
+
+
+    /* FILTER TYPE */
+
+    if(activeType !== "All"){
+
+        routes =
+            routes.filter(
+                route =>
+                    route.type === activeType
+            );
+
+    }
+
+
+    /* SORT */
+
+    const sort =
+        sortSelect.value;
+
+
+    routes.sort(function(a,b){
+
+        if(sort === "price"){
+
+            return Number(a.price) -
+                   Number(b.price);
+
+        }
+
+
+        if(sort === "duration"){
+
+            return Number(a.duration) -
+                   Number(b.duration);
+
+        }
+
+
+        return (
+            Number(Boolean(b.recommended)) -
+            Number(Boolean(a.recommended))
+        );
+
+    });
+
+
+    renderRoutes(routes);
+
+}
+
+
+/* =========================================================
+   RENDER ROUTES
+========================================================= */
+
+function renderRoutes(routes){
+
+    if(routes.length === 0){
+
+        resultsInfo.textContent =
+            "No journeys found.";
+
+        results.innerHTML = `
+
+            <div class="empty">
+
+                <div class="empty-icon">
+                    🔎
                 </div>
 
-            </form>
+                <h2>
+                    No journeys available
+                </h2>
 
-        </section>
+                <p>
+                    Try another origin, destination
+                    or transport type.
+                </p>
 
+            </div>
 
-        <!-- RESULTS -->
+        `;
 
-        <div class="results-header">
+        return;
 
-            <h2 id="resultsTitle">
-                Available Journeys
-            </h2>
+    }
 
 
-            <select
-                id="sortSelect"
-                class="sort-select">
+    resultsInfo.textContent =
+        routes.length +
+        (
+            routes.length === 1
+            ? " journey found"
+            : " journeys found"
+        );
 
-                <option value="recommended">
-                    Recommended
-                </option>
 
-                <option value="price">
-                    Lowest Price
-                </option>
-
-                <option value="duration">
-                    Shortest Time
-                </option>
-
-            </select>
-
-        </div>
-
-
-        <!-- FILTERS -->
-
-        <div class="filters">
-
-            <button
-                class="filter-btn active"
-                data-type="All">
-
-                All
-
-            </button>
-
-
-            <button
-                class="filter-btn"
-                data-type="Taxi">
-
-                🚕 Taxi
-
-            </button>
-
-
-            <button
-                class="filter-btn"
-                data-type="Bus">
-
-                🚌 Bus
-
-            </button>
-
-
-            <button
-                class="filter-btn"
-                data-type="Train">
-
-                🚆 Train
-
-            </button>
-
-
-            <button
-                class="filter-btn"
-                data-type="Integrated">
-
-                🔗 Integrated
-
-            </button>
-
-        </div>
-
-
-        <!-- ROUTES -->
-
-        <div id="routeResults"></div>
-
-
-    </main>
-
-
-    <script>
-
-        /*
-        =====================================================
-        TRANSITCONNECT JOURNEY PLANNER
-        =====================================================
-
-        This is a FRONTEND-ONLY prototype.
-
-        Route information is stored in JavaScript.
-
-        The selected journey is stored in:
-
-            localStorage.selectedRoute
-
-        The next page, journey-details.html, will read
-        that information.
-        */
-
-
-        /* =========================
-           CHECK LOGIN
-        ========================= */
-
-        const currentUser =
-            JSON.parse(
-                localStorage.getItem("currentUser")
-            );
-
-
-        if (!currentUser) {
-
-            window.location.href = "login.html";
-
-        }
-
-
-        /* =========================
-           SAMPLE ROUTE DATABASE
-        ========================= */
-
-        const routes = [
-
-            {
-                id: "R001",
-
-                type: "Train",
-
-                icon: "🚆",
-
-                operator: "Gautrain",
-
-                from: "Johannesburg Station",
-
-                to: "Pretoria Station",
-
-                departure: "07:30",
-
-                arrival: "08:25",
-
-                duration: 55,
-
-                price: 35,
-
-                transfers: 0,
-
-                status: "On time",
-
-                recommended: true,
-
-                legs: ["Train"]
-
-            },
-
-
-            {
-                id: "R002",
-
-                type: "Bus",
-
-                icon: "🚌",
-
-                operator: "TransitConnect Bus",
-
-                from: "Johannesburg CBD",
-
-                to: "Pretoria CBD",
-
-                departure: "07:15",
-
-                arrival: "09:00",
-
-                duration: 105,
-
-                price: 30,
-
-                transfers: 0,
-
-                status: "On time",
-
-                recommended: false,
-
-                legs: ["Bus"]
-
-            },
-
-
-            {
-                id: "R003",
-
-                type: "Taxi",
-
-                icon: "🚕",
-
-                operator: "City Taxi",
-
-                from: "Johannesburg",
-
-                to: "Pretoria CBD",
-
-                departure: "07:20",
-
-                arrival: "08:35",
-
-                duration: 75,
-
-                price: 80,
-
-                transfers: 0,
-
-                status: "Available",
-
-                recommended: false,
-
-                legs: ["Taxi"]
-
-            },
-
-
-            {
-                id: "R004",
-
-                type: "Integrated",
-
-                icon: "🔗",
-
-                operator: "TransitConnect Integrated",
-
-                from: "Johannesburg",
-
-                to: "Pretoria CBD",
-
-                departure: "07:00",
-
-                arrival: "08:50",
-
-                duration: 110,
-
-                price: 60,
-
-                transfers: 2,
-
-                status: "On time",
-
-                recommended: true,
-
-                legs: [
-                    "🚕 Taxi",
-                    "🚆 Train",
-                    "🚌 Bus"
-                ]
-
-            },
-
-
-            {
-                id: "R005",
-
-                type: "Integrated",
-
-                icon: "🔗",
-
-                operator: "TransitConnect Integrated",
-
-                from: "Soweto",
-
-                to: "Pretoria CBD",
-
-                departure: "06:50",
-
-                arrival: "08:45",
-
-                duration: 115,
-
-                price: 55,
-
-                transfers: 2,
-
-                status: "Available",
-
-                recommended: false,
-
-                legs: [
-                    "🚌 Bus",
-                    "🚆 Train",
-                    "🚌 Bus"
-                ]
-
-            },
-
-
-            {
-                id: "R006",
-
-                type: "Bus",
-
-                icon: "🚌",
-
-                operator: "TransitConnect Bus",
-
-                from: "Soweto",
-
-                to: "Johannesburg CBD",
-
-                departure: "08:00",
-
-                arrival: "08:50",
-
-                duration: 50,
-
-                price: 20,
-
-                transfers: 0,
-
-                status: "On time",
-
-                recommended: true,
-
-                legs: ["Bus"]
-
-            },
-
-
-            {
-                id: "R007",
-
-                type: "Train",
-
-                icon: "🚆",
-
-                operator: "Gautrain",
-
-                from: "Pretoria Station",
-
-                to: "Johannesburg Station",
-
-                departure: "16:00",
-
-                arrival: "16:55",
-
-                duration: 55,
-
-                price: 35,
-
-                transfers: 0,
-
-                status: "On time",
-
-                recommended: true,
-
-                legs: ["Train"]
-
-            },
-
-
-            {
-                id: "R008",
-
-                type: "Taxi",
-
-                icon: "🚕",
-
-                operator: "City Taxi",
-
-                from: "Pretoria",
-
-                to: "Johannesburg",
-
-                departure: "17:10",
-
-                arrival: "18:25",
-
-                duration: 75,
-
-                price: 80,
-
-                transfers: 0,
-
-                status: "Available",
-
-                recommended: false,
-
-                legs: ["Taxi"]
-
-            }
-
-        ];
-
-
-        /* =========================
-           VARIABLES
-        ========================= */
-
-        let currentRoutes = routes;
-
-        let selectedType = "All";
-
-
-        const results =
-            document.getElementById("routeResults");
-
-
-        const searchForm =
-            document.getElementById("searchForm");
-
-
-        const fromInput =
-            document.getElementById("from");
-
-
-        const toInput =
-            document.getElementById("to");
-
-
-        const dateInput =
-            document.getElementById("date");
-
-
-        const sortSelect =
-            document.getElementById("sortSelect");
-
-
-        /* =========================
-           TODAY'S DATE
-        ========================= */
-
-        const today =
-            new Date()
-            .toISOString()
-            .split("T")[0];
-
-
-        dateInput.min = today;
-
-
-        /* =========================
-           LOAD PREVIOUS SEARCH
-        ========================= */
-
-        const savedSearch =
-            JSON.parse(
-                localStorage.getItem("journeySearch")
-            );
-
-
-        if (savedSearch) {
-
-            fromInput.value =
-                savedSearch.from || "";
-
-            toInput.value =
-                savedSearch.to || "";
-
-            dateInput.value =
-                savedSearch.date || today;
-
-        } else {
-
-            dateInput.value = today;
-
-        }
-
-
-        /* =========================
-           NORMALIZE TEXT
-        ========================= */
-
-        function normalize(text) {
-
-            return text
-                .toLowerCase()
-                .replace("station", "")
-                .replace("cbd", "")
-                .trim();
-
-        }
-
-
-        /* =========================
-           SEARCH ROUTES
-        ========================= */
-
-        function searchRoutes() {
-
-            const from =
-                normalize(fromInput.value);
-
-
-            const to =
-                normalize(toInput.value);
-
-
-            if (!from || !to) {
-
-                currentRoutes = routes;
-
-                renderRoutes(currentRoutes);
-
-                return;
-
-            }
-
-
-            let matches =
-                routes.filter(function(route) {
-
-                    const routeFrom =
-                        normalize(route.from);
-
-                    const routeTo =
-                        normalize(route.to);
-
-
-                    const fromMatch =
-                        routeFrom.includes(from) ||
-                        from.includes(routeFrom);
-
-
-                    const toMatch =
-                        routeTo.includes(to) ||
-                        to.includes(routeTo);
-
-
-                    return fromMatch && toMatch;
-
-                });
-
-
-            /*
-                If an exact match is not found,
-                allow common Johannesburg/Pretoria
-                searches to display the demo routes.
-            */
-
-            if (matches.length === 0) {
-
-                const fromJoburg =
-                    from.includes("johannesburg") ||
-                    from.includes("joburg");
-
-
-                const toPretoria =
-                    to.includes("pretoria");
-
-
-                const fromPretoria =
-                    from.includes("pretoria");
-
-
-                const toJoburg =
-                    to.includes("johannesburg") ||
-                    to.includes("joburg");
-
-
-                if (fromJoburg && toPretoria) {
-
-                    matches = routes.filter(function(route) {
-
-                        return (
-                            route.id === "R001" ||
-                            route.id === "R002" ||
-                            route.id === "R003" ||
-                            route.id === "R004"
-                        );
-
-                    });
-
-                }
-
-
-                if (fromPretoria && toJoburg) {
-
-                    matches = routes.filter(function(route) {
-
-                        return (
-                            route.id === "R007" ||
-                            route.id === "R008"
-                        );
-
-                    });
-
-                }
-
-            }
-
-
-            currentRoutes = matches;
-
-            applyFilters();
-
-        }
-
-
-        /* =========================
-           FILTER
-        ========================= */
-
-        function applyFilters() {
-
-            let filtered =
-                [...currentRoutes];
-
-
-            if (selectedType !== "All") {
-
-                filtered =
-                    filtered.filter(function(route) {
-
-                        return route.type === selectedType;
-
-                    });
-
-            }
-
-
-            /* SORT */
-
-            const sort =
-                sortSelect.value;
-
-
-            if (sort === "price") {
-
-                filtered.sort(function(a,b) {
-
-                    return a.price - b.price;
-
-                });
-
-            }
-
-
-            else if (sort === "duration") {
-
-                filtered.sort(function(a,b) {
-
-                    return a.duration - b.duration;
-
-                });
-
-            }
-
-
-            else {
-
-                filtered.sort(function(a,b) {
-
-                    return (
-                        Number(b.recommended) -
-                        Number(a.recommended)
-                    );
-
-                });
-
-            }
-
-
-            renderRoutes(filtered);
-
-        }
-
-
-        /* =========================
-           DISPLAY ROUTES
-        ========================= */
-
-        function renderRoutes(routeList) {
-
-            if (routeList.length === 0) {
-
-                results.innerHTML = `
-
-                    <div class="empty">
-
-                        <div class="empty-icon">
-                            🔍
-                        </div>
-
-                        <h3>
-                            No journeys found
-                        </h3>
-
-                        <p>
-                            Try another starting point,
-                            destination or transport filter.
-                        </p>
-
-                    </div>
-
-                `;
-
-                document.getElementById("resultsTitle")
-                    .textContent =
-                    "No journeys found";
-
-                return;
-
-            }
-
-
-            document.getElementById("resultsTitle")
-                .textContent =
-                routeList.length +
-                " Journey" +
-                (routeList.length === 1 ? "" : "s") +
-                " Available";
-
-
-            results.innerHTML =
-                routeList.map(function(route) {
-
-                    return createRouteCard(route);
-
-                }).join("");
-
-
-            /* ADD SELECT BUTTON EVENTS */
-
-            document
-                .querySelectorAll(".select-btn")
-                .forEach(function(button) {
-
-                    button.addEventListener(
-                        "click",
-                        function() {
-
-                            selectJourney(
-                                button.dataset.id
-                            );
-
-                        }
-                    );
-
-                });
-
-        }
-
-
-        /* =========================
-           ROUTE CARD
-        ========================= */
-
-        function createRouteCard(route) {
-
-            const legs =
-                route.legs.map(function(leg, index) {
-
-                    let html =
-                        `<span class="leg">${leg}</span>`;
-
-                    if (index < route.legs.length - 1) {
-
-                        html +=
-                            `<span class="arrow">→</span>`;
-
-                    }
-
-                    return html;
-
-                }).join("");
-
+    results.innerHTML =
+        routes.map(function(route){
 
             return `
 
-                <div class="route-card">
-
+                <article class="route-card">
 
                     <div class="route-top">
-
 
                         <div class="transport">
 
                             <div class="transport-icon">
-                                ${route.icon}
-                            </div>
 
+                                ${route.icon || "🚆"}
+
+                            </div>
 
                             <div>
 
-                                <div class="transport-name">
-
-                                    ${route.type}
-
-                                    ${
-                                        route.recommended
-                                        ?
-                                        `<span class="recommended">
-                                            Recommended
-                                        </span>`
-                                        :
-                                        ""
-                                    }
-
-                                </div>
-
-
                                 <div class="operator">
-                                    ${route.operator}
+
+                                    ${escapeHTML(
+                                        route.operator
+                                    )}
+
                                 </div>
 
+                                <div class="type">
+
+                                    ${escapeHTML(
+                                        route.type
+                                    )}
+
+                                </div>
 
                             </div>
 
                         </div>
 
 
-                        <div class="price">
+                        ${
+                            route.recommended
+                            ? `
+                                <span class="badge">
+                                    ⭐ Recommended
+                                </span>
+                              `
+                            : ""
+                        }
 
-                            R${route.price.toFixed(2)}
+                    </div>
+
+
+                    <div class="route-main">
+
+                        <div class="location">
+
+                            <strong>
+
+                                ${escapeHTML(
+                                    route.from
+                                )}
+
+                            </strong>
+
+                            <span>
+                                Departure
+                            </span>
 
                         </div>
 
+
+                        <div class="time">
+
+                            <strong>
+
+                                ${escapeHTML(
+                                    route.departure
+                                )}
+
+                            </strong>
+
+                            <div class="line"></div>
+
+                            <span class="duration">
+
+                                ${formatDuration(
+                                    route.duration
+                                )}
+
+                            </span>
+
+                        </div>
+
+
+                        <div class="location">
+
+                            <strong>
+
+                                ${escapeHTML(
+                                    route.to
+                                )}
+
+                            </strong>
+
+                            <span>
+                                Arrival
+                            </span>
+
+                        </div>
 
                     </div>
 
 
                     ${
-                        route.type === "Integrated"
-                        ?
-                        `
-                        <div class="integrated-legs">
+                        route.type === "Integrated" &&
+                        Array.isArray(route.legs)
 
-                            ${legs}
+                        ? `
 
-                        </div>
-                        `
-                        :
-                        ""
+                            <div class="legs">
+
+                                ${route.legs.map(
+                                    leg => `
+                                        <span class="leg">
+                                            ${escapeHTML(leg)}
+                                        </span>
+                                    `
+                                ).join("")}
+
+                            </div>
+
+                          `
+
+                        : ""
+
                     }
-
-
-                    <div class="route-line">
-
-
-                        <div>
-
-                            <div class="time">
-                                ${route.departure}
-                            </div>
-
-                            <div class="location">
-                                ${route.from}
-                            </div>
-
-                        </div>
-
-
-                        <div>
-
-                            <div class="timeline"></div>
-
-                            <div class="duration">
-                                ${formatDuration(route.duration)}
-                            </div>
-
-                        </div>
-
-
-                        <div>
-
-                            <div class="time">
-                                ${route.arrival}
-                            </div>
-
-                            <div class="location">
-                                ${route.to}
-                            </div>
-
-                        </div>
-
-
-                    </div>
 
 
                     <div class="route-bottom">
 
+                        <div class="details">
 
-                        <div class="route-info">
+                            <span>
+                                🕐
+                                ${formatDuration(
+                                    route.duration
+                                )}
+                            </span>
 
+                            <span>
+                                🔄
+                                ${route.transfers || 0}
+                                transfers
+                            </span>
 
-                            <div class="info-item">
-
-                                <strong>
-                                    Duration:
-                                </strong>
-
-                                ${formatDuration(route.duration)}
-
-                            </div>
-
-
-                            <div class="info-item">
-
-                                <strong>
-                                    Transfers:
-                                </strong>
-
-                                ${route.transfers}
-
-                            </div>
-
-
-                            <div class="info-item">
-
-                                <strong>
-                                    Status:
-                                </strong>
-
-                                ${route.status}
-
-                            </div>
-
+                            <span>
+                                📌
+                                ${escapeHTML(
+                                    route.status ||
+                                    "Available"
+                                )}
+                            </span>
 
                         </div>
 
 
-                        <button
-                            class="select-btn"
-                            data-id="${route.id}">
+                        <div>
 
-                            Select Journey →
+                            <div class="price">
 
-                        </button>
+                                ${formatCurrency(
+                                    route.price
+                                )}
 
+                            </div>
+
+                            <button
+                                class="select-btn"
+                                onclick="selectJourney('${route.id}')"
+                            >
+                                Select Journey →
+                            </button>
+
+                        </div>
 
                     </div>
 
-
-                </div>
+                </article>
 
             `;
 
-        }
+        }).join("");
+
+}
 
 
-        /* =========================
-           FORMAT DURATION
-        ========================= */
+/* =========================================================
+   SELECT JOURNEY
+========================================================= */
 
-        function formatDuration(minutes) {
+function selectJourney(id){
 
-            const hours =
-                Math.floor(minutes / 60);
-
-
-            const mins =
-                minutes % 60;
+    const routes =
+        getRoutes();
 
 
-            if (hours === 0) {
-
-                return mins + " min";
-
-            }
-
-
-            return (
-                hours +
-                " hr " +
-                mins +
-                " min"
-            );
-
-        }
+    const route =
+        routes.find(
+            item => item.id === id
+        );
 
 
-        /* =========================
-           SELECT JOURNEY
-        ========================= */
+    if(!route){
 
-        function selectJourney(routeId) {
+        alert(
+            "Journey could not be found."
+        );
 
-            const route =
-                routes.find(function(item) {
+        return;
 
-                    return item.id === routeId;
-
-                });
+    }
 
 
-            if (!route) {
-
-                alert("Journey could not be found.");
-
-                return;
-
-            }
+    localStorage.setItem(
+        "selectedRoute",
+        JSON.stringify(route)
+    );
 
 
-            /*
-                Save the selected journey.
-
-                journey-details.html will use this data.
-            */
-
-            localStorage.setItem(
-                "selectedRoute",
-                JSON.stringify(route)
-            );
+    localStorage.setItem(
+        "selectedTravelDate",
+        dateInput.value
+    );
 
 
-            /*
-                Save the date selected by passenger.
-            */
+    window.location.href =
+        "journey-details.html";
 
-            localStorage.setItem(
-                "selectedTravelDate",
-                dateInput.value
-            );
+}
 
 
-            window.location.href =
-                "journey-details.html";
+/* =========================================================
+   FORMAT DURATION
+========================================================= */
 
-        }
+function formatDuration(minutes){
 
-
-        /* =========================
-           SEARCH FORM
-        ========================= */
-
-        searchForm.addEventListener(
-            "submit",
-            function(event) {
-
-                event.preventDefault();
+    minutes =
+        Number(minutes) || 0;
 
 
-                localStorage.setItem(
-                    "journeySearch",
-                    JSON.stringify({
+    const hours =
+        Math.floor(minutes / 60);
 
-                        from: fromInput.value,
 
-                        to: toInput.value,
+    const mins =
+        minutes % 60;
 
-                        date: dateInput.value
 
-                    })
+    if(hours === 0){
+
+        return mins + " min";
+
+    }
+
+
+    if(mins === 0){
+
+        return hours + " hr";
+
+    }
+
+
+    return (
+        hours +
+        " hr " +
+        mins +
+        " min"
+    );
+
+}
+
+
+/* =========================================================
+   FORMAT CURRENCY
+========================================================= */
+
+function formatCurrency(amount){
+
+    return "R" +
+        (Number(amount) || 0).toFixed(2);
+
+}
+
+
+/* =========================================================
+   ESCAPE HTML
+========================================================= */
+
+function escapeHTML(value){
+
+    if(value === null ||
+       value === undefined){
+
+        return "";
+
+    }
+
+
+    return String(value)
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+
+}
+
+
+/* =========================================================
+   FILTER BUTTONS
+========================================================= */
+
+document
+    .querySelectorAll(".filter")
+    .forEach(function(button){
+
+        button.addEventListener(
+            "click",
+            function(){
+
+                document
+                    .querySelectorAll(".filter")
+                    .forEach(
+                        btn =>
+                            btn.classList.remove(
+                                "active"
+                            )
+                    );
+
+
+                button.classList.add(
+                    "active"
                 );
+
+
+                activeType =
+                    button.dataset.type;
 
 
                 searchRoutes();
@@ -1753,86 +1256,55 @@
             }
         );
 
-
-        /* =========================
-           FILTER BUTTONS
-        ========================= */
-
-        document
-            .querySelectorAll(".filter-btn")
-            .forEach(function(button) {
-
-                button.addEventListener(
-                    "click",
-                    function() {
-
-                        document
-                            .querySelectorAll(".filter-btn")
-                            .forEach(function(btn) {
-
-                                btn.classList.remove("active");
-
-                            });
+    });
 
 
-                        button.classList.add("active");
+/* =========================================================
+   EVENTS
+========================================================= */
+
+searchBtn.addEventListener(
+    "click",
+    searchRoutes
+);
 
 
-                        selectedType =
-                            button.dataset.type;
+sortSelect.addEventListener(
+    "change",
+    searchRoutes
+);
 
 
-                        applyFilters();
+/* =========================================================
+   ENTER KEY
+========================================================= */
 
-                    }
-                );
+[fromInput,toInput,dateInput]
+    .forEach(function(input){
 
-            });
+        input.addEventListener(
+            "keydown",
+            function(event){
 
+                if(event.key === "Enter"){
 
-        /* =========================
-           SORT
-        ========================= */
+                    searchRoutes();
 
-        sortSelect.addEventListener(
-            "change",
-            function() {
-
-                applyFilters();
+                }
 
             }
         );
 
-
-        /* =========================
-           LOGOUT
-        ========================= */
-
-        document
-            .getElementById("logoutBtn")
-            .addEventListener(
-                "click",
-                function() {
-
-                    localStorage.removeItem(
-                        "currentUser"
-                    );
-
-                    window.location.href =
-                        "index.html";
-
-                }
-            );
+    });
 
 
-        /* =========================
-           INITIAL DISPLAY
-        ========================= */
+/* =========================================================
+   INITIAL DISPLAY
+========================================================= */
 
-        searchRoutes();
+searchRoutes();
 
-    </script>
+</script>
 
 </body>
-
 </html>
